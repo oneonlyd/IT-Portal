@@ -27,6 +27,8 @@ SET time_zone = "+00:00";
 -- Table structure for table `aplikasi`
 --
 
+USE it_portal;
+
 CREATE TABLE `aplikasi` (
   `id` int(11) NOT NULL,
   `nama_app` varchar(100) NOT NULL,

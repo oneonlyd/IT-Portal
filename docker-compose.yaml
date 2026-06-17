@@ -1,0 +1,27 @@
+services:
+  app:
+    build: .
+    container_name: it-portal-app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    container_name: it-portal-db
+    environment:
+      MYSQL_ROOT_PASSWORD: devina123
+      MYSQL_DATABASE: it_portal
+    ports:
+      - "3314:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./it_portal.sql:/docker-entrypoint-initdb.d/01-it_portal.sql
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
