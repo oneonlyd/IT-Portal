@@ -3,10 +3,10 @@
 // File ini digunakan untuk membuat koneksi tunggal ke database MySQL menggunakan PDO.
 
 // 1. Parameter Konfigurasi Database
-$host     = '127.0.0.1';    // Menggunakan IP local loopback (lebih cepat dibanding 'localhost' di beberapa OS)
+$host     = 'mysql';    // Menggunakan IP local loopback (lebih cepat dibanding 'localhost' di beberapa OS)
 $db       = 'it_portal';    // Nama database yang telah kita buat
 $user     = 'root';         // User utama MySQL
-$pass     = 'Apel1289'; // PENTING: Ganti dengan password baru yang Anda atur di phpMyAdmin sebelumnya!
+$pass     = 'devina123'; // PENTING: Ganti dengan password baru yang Anda atur di phpMyAdmin sebelumnya!
 $charset  = 'utf8mb4';      // Charset yang mendukung penyimpanan teks Unicode modern
 
 // 2. Data Source Name (DSN)
