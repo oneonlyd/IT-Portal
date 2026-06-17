@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Portal - Admin Panel Kelola Aplikasi</title>
+    <!-- Tailwind CSS versi modern via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons via CDN untuk visual ikon profesional -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between antialiased">
+
+    <!-- === HEADER NAVBAR === -->
+    <header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                
+                <!-- SISI KIRI: Brand Logo -->
+                <div class="flex items-center gap-8">
+                    <a href="dashboard.html" class="flex items-center gap-2.5">
+                        <div class="bg-red-800 text-white p-2 rounded-xl shadow-inner">
+                            <i data-lucide="laptop" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-bold text-slate-900 leading-none tracking-tight">IT PORTAL</h1>
+                        </div>
+                    </a>
+
+                    <!-- Navigasi Menu Tengah -->
+                    <nav class="hidden md:flex items-center gap-1">
+                        <a href="dashboard.html" class="px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg text-sm font-medium flex items-center gap-1.5">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                            Dashboard
+                        </a>
+                        <a href="admin.html" class="px-4 py-2 bg-red-50 text-red-800 rounded-lg text-sm font-semibold flex items-center gap-1.5">
+                            <i data-lucide="settings" class="w-4 h-4"></i>
+                            Admin Panel (Kelola)
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- SISI KANAN: User Profile Dropdown -->
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <button 
+                            id="profile-menu-button"
+                            onclick="toggleProfileDropdown()" 
+                            class="flex items-center gap-2 pl-2 pr-3 py-1.5 hover:bg-slate-50 border border-transparent hover:border-slate-200 rounded-xl transition-all cursor-pointer"
+                        >
+                            <div class="w-8 h-8 rounded-full bg-red-800/10 border border-red-800/20 flex items-center justify-center text-red-800 font-bold text-sm shadow-sm" id="user-avatar">
+                                A
+                            </div>
+                            <div class="hidden sm:block text-left">
+                                <span class="block text-xs font-semibold text-slate-800 leading-tight" id="user-name">it.admin</span>
+                                <span class="block text-[10px] text-slate-400 font-medium" id="user-role">IT Administrator</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500"></i>
+                        </button>
+
+                        <!-- Dropdown Menu (Tersembunyi secara default) -->
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 z-50 py-1.5">
+                            <div class="px-4 py-2 border-b border-slate-50 mb-1">
+                                <span class="block text-xs text-slate-400 font-medium">Masuk Sebagai:</span>
+                                <span class="block text-sm font-bold text-slate-800 truncate" id="dropdown-fullname">IT Admin Pratama</span>
+                                <span class="block text-[10px] text-slate-500 truncate mt-0.5">admin.portal@perusahaan.com</span>
+                            </div>
+
+                            <button onclick="showProfileModal()" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 flex items-center gap-2 cursor-pointer">
+                                <i data-lucide="user" class="w-4 h-4 text-slate-400"></i>
+                                Detail Profil
+                            </button>
+
+                            <button onclick="showSettingsModal()" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 flex items-center gap-2 cursor-pointer">
+                                <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i>
+                                Pengaturan
+                            </button>
+
+                            <div class="border-t border-slate-100 my-1"></div>
+
+                            <button onclick="handleLogout()" class="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 hover:text-red-850 flex items-center gap-2 font-medium cursor-pointer">
+                                <i data-lucide="log-out" class="w-4 h-4"></i>
+                                Log out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- === KONTEN UTAMA MANAJEMEN APLIKASI === -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+        
+        <!-- Header Manajemen Aplikasi -->
+        <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-5 pb-5 border-b border-slate-200">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs bg-red-100 text-red-800 font-bold px-2.5 py-0.5 rounded-md">ADMIN HAK AKSES</span>
+                    <span class="text-xs text-slate-400 font-medium">Panel Kontrol Portal</span>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Manajemen Aplikasi</h2>
+                <p class="text-sm text-slate-500 mt-1">Kelola daftar portal aplikasi yang terbit di dashboard, ubah nama, deskripsi, warna, sertakan path.</p>
+            </div>
+
+            <!-- Tombol Tambah Aplikasi Baru (Memanggil modal popup) -->
+            <div>
+                <button 
+                    onclick="openAddModal()"
+                    class="px-5 py-2.5 bg-red-800 hover:bg-red-900 active:bg-red-950 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+                >
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    Tambah Aplikasi
+                </button>
+            </div>
+        </div>
+
+        <!-- AREA TABEL UTAMA -->
+        <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
+            
+            <!-- Pencarian di Area Tabel Admin -->
+            <div class="p-4 bg-slate-50/50 border-b border-slate-150 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Daftar Aplikasi Aktif (<span id="count-total">0</span>)</span>
+                
+                <div class="relative w-full sm:w-64">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400">
+                        <i data-lucide="search" class="h-3.5 w-3.5"></i>
+                    </span>
+                    <input 
+                        type="text" 
+                        id="table-search" 
+                        oninput="filterTable()" 
+                        placeholder="Cari dalam tabel..." 
+                        class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-red-800 focus:ring-1 focus:ring-red-200 transition-all font-medium"
+                    >
+                </div>
+            </div>
+
+            <!-- Tabel daftar aplikasi -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse table-auto">
+                    <thead>
+                        <tr class="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                            <th class="px-6 py-3 w-[25%] text-left">Nama Aplikasi</th>
+                            <th class="px-6 py-3 w-[15%] text-left">Tipe Portal</th>
+                            <th class="px-6 py-3 w-[35%] text-left font-mono">URL/Path Executable</th>
+                            <th class="px-6 py-3 w-[15%] text-left">Visual Banner</th>
+                            <th class="px-6 py-3 w-[10%] text-center">Aksi Kerja</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body" class="divide-y divide-slate-100 text-xs">
+                        <!-- Data tabel akan di-render menggunakan JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bagian Footer Tabel Informasi -->
+            <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 text-[11px] text-slate-400 flex items-center justify-between">
+                <span>* Berhasil disinkronisasi ke memori runtime client secara optimal.</span>
+                <span>Total Aktif: <span id="count-summary">0</span> Portals</span>
+            </div>
+
+        </div>
+
+        <!-- Tombol navigasi kembali -->
+        <div class="mt-6 text-center">
+            <a href="dashboard.html" class="text-xs text-red-800 hover:underline inline-flex items-center gap-1 font-semibold">
+                ← Kembali ke Beranda Portal Utama
+            </a>
+        </div>
+
+    </main>
+
+    <!-- === FOOTER HALAMAN === -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-400">
+            <p>© 2026 IT Internship - Devina Setya Maharani</p>
+        </div>
+    </footer>
+
+
+
+
+    <!-- === MODAL POPUP: FORM TAMBAH / EDIT APLIKASI === -->
+    <div id="modal-app-form" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 p-6 relative">
+            
+            <!-- Tombol silang x untuk tutup modal -->
+            <button onclick="closeFormModal()" class="absolute top-4 right-4 p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Judul Form (Disesuaikan lewat JS) -->
+            <h3 id="form-modal-title" class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-1.5 text-red-850">
+                <i data-lucide="plus" class="w-5 h-5 text-red-800"></i>
+                Tambah Aplikasi Baru
+            </h3>
+
+            <!-- Form input -->
+            <form id="app-manager-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <input type="hidden" id="app-id">
+
+                <div>
+                    <label for="app-name" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Nama Aplikasi</label>
+                    <input 
+                        type="text" 
+                        id="app-name" 
+                        placeholder="Contoh: IT Monitoring, KB System" 
+                        class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1 focus:ring-red-250 transition-all font-medium"
+                        required
+                    >
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="app-type" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Tipe Portal</label>
+                        <select 
+                            id="app-type" 
+                            onchange="adjustFormPlaceholder()"
+                            class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1"
+                        >
+                            <option value="Web">Web (URL Browser)</option>
+                            <option value="Desktop">Desktop (Local Executable Path)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="app-color" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Model Warna Banner</label>
+                        <select 
+                            id="app-color" 
+                            class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1"
+                        >
+                            <option value="cyan">Cyan (Biru Muda)</option>
+                            <option value="blue">Blue (Biru Utama)</option>
+                            <option value="purple">Purple (Ungu Violet)</option>
+                            <option value="gray">Gray (Abu Slate)</option>
+                            <option value="emerald">Emerald (Hijau Daun)</option>
+                            <option value="rose">Rose (Merah Jambu)</option>
+                            <option value="amber">Amber (Kuning Mas)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label id="app-url-label" for="app-url" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">URL Aplikasi (Web)</label>
+                    <input 
+                        type="text" 
+                        id="app-url" 
+                        placeholder="https://helpdesk.internal.it" 
+                        class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1 focus:ring-red-250 transition-all"
+                        required
+                    >
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="app-username" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Username Portal</label>
+                        <input 
+                            type="text" 
+                            id="app-username" 
+                            placeholder="Contoh: admin.helpdesk" 
+                            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1 focus:ring-red-250 transition-all"
+                            required
+                        >
+                    </div>
+                    <div>
+                        <label for="app-password" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Password Portal</label>
+                        <input 
+                            type="text" 
+                            id="app-password" 
+                            placeholder="Contoh: P@ss123" 
+                            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1 focus:ring-red-250 transition-all"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Petunjuk Simpan -->
+                <div class="bg-indigo-50/50 p-3 rounded-lg border border-indigo-100 text-[11px] text-indigo-805 leading-relaxed">
+                    <strong>Penting:</strong> Menambahkan atau mengedit aplikasi melalui interface ini akan langsung memperbarui data internal aplikasi browser Anda secara seketika.
+                </div>
+
+                <!-- Bagian Tombol Aksi Form -->
+                <div class="mt-5 flex gap-3">
+                    <button 
+                        type="submit" 
+                        class="flex-1 py-2.5 bg-red-800 hover:bg-red-900 text-white rounded-xl text-xs font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
+                    >
+                        Simpan & Terbitkan
+                    </button>
+                    <button 
+                        type="button" 
+                        onclick="closeFormModal()"
+                        class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold active:scale-95 transition-all cursor-pointer"
+                    >
+                        Batal
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+    <!-- === MODAL POPUP: DETAIL PROFIL === -->
+    <div id="modal-profile" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 p-6 relative">
+            <button onclick="closeProfileModal()" class="absolute top-4 right-4 p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="text-center py-2">
+                <div class="w-20 h-20 rounded-full bg-red-800/10 border-2 border-red-800/20 flex items-center justify-center text-red-800 font-extrabold text-3xl shadow-sm mx-auto mb-4">
+                    A
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 leading-none">IT Admin Pratama</h3>
+                <p class="text-xs text-indigo-600 font-semibold mt-1.5">Senior System Administrator</p>
+                <div class="mt-5 space-y-3 text-left text-xs text-slate-600">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase">ID Pengguna</span>
+                        <span class="font-mono text-slate-800 mt-1 block">it.admin</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase">Email Kantor</span>
+                        <span class="text-slate-800 mt-1 block">admin.portal@perusahaan.com</span>
+                    </div>
+                </div>
+                <button onclick="closeProfileModal()" class="w-full mt-6 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold shadow-md transition-all cursor-pointer">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- === MODAL POPUP: PENGATURAN === -->
+    <div id="modal-settings" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 p-6 relative">
+            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-all">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <i data-lucide="settings" class="w-5 h-5 text-red-800"></i>
+                Pengaturan Akun
+            </h3>
+            <form onsubmit="saveSettings(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Nama Lengkap</label>
+                    <input type="text" id="settings-fullname" value="IT Admin Pratama" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Role/Jabatan</label>
+                    <input type="text" id="settings-role" value="Senior System Administrator" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1" required>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg text-[11px] text-slate-500">
+                    Pengaturan disimpan secara lokal pada memori browser untuk simulasi frontend.
+                </div>
+                <div class="mt-5 flex gap-3">
+                    <button type="submit" class="flex-1 py-2 bg-red-800 hover:bg-red-900 text-white rounded-xl text-xs font-semibold transition-all shadow-md cursor-pointer">Simpan</button>
+                    <button type="button" onclick="closeSettingsModal()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all cursor-pointer">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- === JAVASCRIPT LOGIC DENGAN FITUR CRUD LOKAL === -->
+    <script>
+        // Preset warna visual
+        const PRESET_COLORS = {
+            cyan: 'bg-cyan-500',
+            blue: 'bg-blue-600',
+            purple: 'bg-indigo-600',
+            gray: 'bg-slate-600',
+            emerald: 'bg-emerald-600',
+            rose: 'bg-rose-600',
+            amber: 'bg-amber-500'
+        };
+
+        // Memori array penampung dataset (diisi via API)
+        let MY_APPS = [];
+
+        // Onload init
+        document.addEventListener("DOMContentLoaded", () => {
+            // Ambil profile dari localStorage jika pernah setup
+            const savedUser = localStorage.getItem('currentUser') || 'Tim IT';
+            const savedRole = localStorage.getItem('currentUserRole');
+
+            // Proteksi Halaman: Hanya admin/superadmin yang boleh masuk
+            if (savedRole !== 'admin' && savedRole !== 'superadmin') {
+                alert('Akses Ditolak! Halaman ini khusus untuk Administrator.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            document.getElementById('user-name').innerText = savedUser.toLowerCase().replace(/\s/g, '.');
+            document.getElementById('dropdown-fullname').innerText = savedUser;
+            document.getElementById('user-avatar').innerText = savedUser.charAt(0).toUpperCase();
+            document.getElementById('user-role').innerText = savedRole === 'superadmin' ? 'Super Administrator' : 'Administrator';
+
+            // Ambil data dari backend API
+            loadApps();
+        });
+
+        // Fungsi memanggil API admin_app.php (GET)
+        function loadApps() {
+            fetch('admin/admin_app.php')
+            .then(res => {
+                if (res.status === 401 || res.status === 403) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                return res.json();
+            })
+            .then(resData => {
+                if (resData && resData.status === 'success') {
+                    // Petakan data dari backend ke format JavaScript frontend
+                    MY_APPS = resData.data.map(app => {
+                        return {
+                            id: app.id.toString(),
+                            name: app.nama_app,
+                            type: app.tipe === 'web' ? 'Web' : 'Desktop',
+                            url: app.url_atau_path,
+                            color: app.warna_banner,
+                            username: app.username_app || '-',
+                            password: app.password_app || '',
+                            desc: app.deskripsi || ''
+                        };
+                    });
+                    renderTable();
+                }
+            })
+            .catch(err => console.error("Gagal memuat aplikasi admin:", err));
+        }
+
+        // Toggle user dropdown menu
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profile-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Tutup dropdown jika klik diluar
+        window.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('profile-dropdown');
+            if (dropdown && !dropdown.classList.contains('hidden') && !e.target.closest('#profile-menu-button') && !e.target.closest('#profile-dropdown')) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Render data array ke tabel baris HTML
+        function renderTable(dataset = MY_APPS) {
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = '';
+
+            // Jumlah total
+            document.getElementById('count-total').innerText = dataset.length;
+            document.getElementById('count-summary').innerText = dataset.length;
+
+            if (dataset.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-slate-400 italic">
+                            Tidak ada aplikasi yang terdaftar sesuai query filter Anda.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            dataset.forEach(app => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/70 transition-colors";
+                
+                const bgClass = PRESET_COLORS[app.color] || 'bg-slate-500';
+                const typeIcon = app.type === 'Web' ? 'globe' : 'monitor';
+                const typeBadgeColor = app.type === 'Web' ? 'bg-cyan-50 text-cyan-700 border-cyan-200' : 'bg-purple-50 text-purple-700 border-purple-200';
+
+                tr.innerHTML = `
+                    <!-- Kolom Nama & Deskripsi -->
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-slate-900">${app.name}</div>
+                        <div class="text-[10px] text-slate-450 mt-0.5">${app.desc || 'Tanpa deskripsi'}</div>
+                        <div class="text-[10px] text-slate-500 font-mono mt-1">
+                            U: <span class="font-semibold select-all text-slate-700">${app.username}</span> | P: <span class="font-semibold select-all text-slate-700">${app.password ? '••••••••' : '-'}</span>
+                        </div>
+                    </td>
+                    <!-- Kolom Badge Tipe -->
+                    <td class="px-6 py-4">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${typeBadgeColor}">
+                            <i data-lucide="${typeIcon}" class="w-2.5 h-2.5"></i>
+                            ${app.type}
+                        </span>
+                    </td>
+                    <!-- Kolom URL / Path -->
+                    <td class="px-6 py-4">
+                        <code class="text-[10.5px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono block truncate max-w-xs md:max-w-md" title="${app.url}">
+                            ${app.url}
+                        </code>
+                    </td>
+                    <!-- Warna Visual -->
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full ${bgClass} shadow-xs"></span>
+                            <span class="text-slate-500 capitalize text-[11px]">${app.color}</span>
+                        </div>
+                    </td>
+                    <!-- Tombol Aksi Kerja -->
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <button 
+                                onclick="openEditModal('${app.id}')"
+                                class="p-1.5 text-slate-500 hover:text-red-800 hover:bg-slate-100 rounded-lg transition-all cursor-pointer"
+                                title="Edit Aplikasi"
+                            >
+                                <i data-lucide="edit-2" class="w-4 h-4"></i>
+                            </button>
+                            <button 
+                                onclick="deleteApp('${app.id}', '${app.name}')"
+                                class="p-1.5 text-slate-500 hover:text-red-700 hover:bg-slate-100 rounded-lg transition-all cursor-pointer"
+                                title="Hapus Aplikasi"
+                            >
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Re-inisialisasi ikon Lucide
+            lucide.createIcons();
+        }
+
+        // Live search tabel admin
+        function filterTable() {
+            const query = document.getElementById('table-search').value.toLowerCase();
+            const results = MY_APPS.filter(app => {
+                return app.name.toLowerCase().includes(query) || 
+                       app.username.toLowerCase().includes(query) || 
+                       app.url.toLowerCase().includes(query) ||
+                       app.desc.toLowerCase().includes(query);
+            });
+            renderTable(results);
+        }
+
+        // Modifikasi placeholder form URL sesuai tipe app
+        function adjustFormPlaceholder() {
+            const type = document.getElementById('app-type').value;
+            const inputUrl = document.getElementById('app-url');
+            const labelUrl = document.getElementById('app-url-label');
+
+            if (type === 'Web') {
+                labelUrl.innerText = "URL Aplikasi (Web)";
+                inputUrl.placeholder = "https://helpdesk.internal.it";
+            } else {
+                labelUrl.innerText = "Path Eksekusi File (Desktop OS Client)";
+                inputUrl.placeholder = "C:\\Path\\Aplikasi\\NamaFile.exe";
+            }
+        }
+
+        // Buka modal untuk Tambah Aplikasi
+        function openAddModal() {
+            document.getElementById('form-modal-title').innerHTML = `<i data-lucide="plus" class="w-5 h-5 text-red-800"></i> Tambah Aplikasi Baru`;
+            document.getElementById('app-id').value = '';
+            document.getElementById('app-name').value = '';
+            document.getElementById('app-type').value = 'Web';
+            document.getElementById('app-color').value = 'cyan';
+            document.getElementById('app-url').value = '';
+            document.getElementById('app-username').value = '';
+            document.getElementById('app-password').value = '';
+
+            adjustFormPlaceholder();
+            document.getElementById('modal-app-form').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // Buka modal Edit Aplikasi
+        function openEditModal(id) {
+            const app = MY_APPS.find(x => x.id === id);
+            if (!app) return;
+
+            document.getElementById('form-modal-title').innerHTML = `<i data-lucide="edit-2" class="w-5 h-5 text-red-850"></i> Edit Aplikasi: ${app.name}`;
+            document.getElementById('app-id').value = app.id;
+            document.getElementById('app-name').value = app.name;
+            document.getElementById('app-type').value = app.type;
+            document.getElementById('app-color').value = app.color;
+            document.getElementById('app-url').value = app.url;
+            document.getElementById('app-username').value = app.username === '-' ? '' : app.username;
+            document.getElementById('app-password').value = app.password; // password asli terdekripsi dari API
+
+            adjustFormPlaceholder();
+            document.getElementById('modal-app-form').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeFormModal() {
+            document.getElementById('modal-app-form').classList.add('hidden');
+        }
+
+        // Proses submit form (Tambah/Edit) terhubung ke API POST admin_app.php
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const appId = document.getElementById('app-id').value;
+            const appName = document.getElementById('app-name').value.trim();
+            const appType = document.getElementById('app-type').value;
+            const appColor = document.getElementById('app-color').value;
+            const appUrl = document.getElementById('app-url').value.trim();
+            const appUsername = document.getElementById('app-username').value.trim();
+            const appPassword = document.getElementById('app-password').value.trim();
+
+            const payload = {
+                action: appId ? 'update' : 'create',
+                id: appId ? parseInt(appId) : null,
+                nama_app: appName,
+                deskripsi: `Kategori: IT Portal Services`,
+                tipe: appType.toLowerCase(),
+                url_atau_path: appUrl,
+                warna_banner: appColor,
+                ikon: appType === 'Web' ? 'globe' : 'monitor',
+                kategori: 'IT Services',
+                tipe_kredensial: 'custom',
+                username_app: appUsername,
+                password_app: appPassword
+            };
+
+            fetch('admin/admin_app.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    closeFormModal();
+                    loadApps(); // Reload tabel data real
+                } else {
+                    alert('Gagal menyimpan aplikasi: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error("Error submit form:", err);
+                alert("Terjadi kesalahan koneksi backend.");
+            });
+        }
+
+        // Hapus aplikasi di database terhubung ke API POST admin_app.php
+        function deleteApp(id, name) {
+            if (confirm(`Apakah Anda yakin ingin menghapus aplikasi "${name}" dari portal IT?`)) {
+                fetch('admin/admin_app.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'delete',
+                        id: parseInt(id)
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        loadApps(); // Reload tabel data real
+                    } else {
+                        alert('Gagal menghapus: ' + data.message);
+                    }
+                })
+                .catch(err => {
+                    console.error("Error menghapus aplikasi:", err);
+                    alert("Terjadi kesalahan koneksi backend.");
+                });
+            }
+        }
+
+        // === USER MENU MODALS ===
+        function showProfileModal() {
+            document.getElementById('modal-profile').classList.remove('hidden');
+        }
+        function closeProfileModal() {
+            document.getElementById('modal-profile').classList.add('hidden');
+        }
+
+        function showSettingsModal() {
+            document.getElementById('modal-settings').classList.remove('hidden');
+        }
+        function closeSettingsModal() {
+            document.getElementById('modal-settings').classList.add('hidden');
+        }
+
+        function saveSettings(e) {
+            e.preventDefault();
+            const fullName = document.getElementById('settings-fullname').value;
+            const role = document.getElementById('settings-role').value;
+            
+            // Simpan perubahan secara visual
+            document.getElementById('user-name').innerText = fullName.toLowerCase().replace(/\s/g, '.');
+            document.getElementById('user-role').innerText = role;
+            document.getElementById('dropdown-fullname').innerText = fullName;
+            
+            closeSettingsModal();
+            alert('Pengaturan preferensi profil Anda berhasil disimpan secara lokal.');
+        }
+
+        function handleLogout() {
+            if(confirm('Lakukan logout dari user portal ini?')) {
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('currentUserRole');
+                window.location.href = 'api/logout.php';
+            }
+    </script>
+</body>
+</html>
