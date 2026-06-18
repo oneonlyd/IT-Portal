@@ -321,7 +321,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initPageTransitions();
 
     // Initialize connection indicator
-    initConnectionIndicator();
+    if (!document.body.hasAttribute('data-no-connection-indicator')) {
+        initConnectionIndicator();
+    }
 
     // Apply translations
     applyTranslations();

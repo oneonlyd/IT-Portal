@@ -43,7 +43,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-800 min-h-screen flex flex-col justify-between antialiased relative overflow-x-hidden">
+<body data-no-connection-indicator="true" class="bg-slate-900 text-slate-800 min-h-screen flex flex-col justify-between antialiased relative overflow-x-hidden">
 
     <!-- Page Transition Overlay -->
     <div id="page-transition-overlay" class="page-transition-overlay"></div>
@@ -51,6 +51,19 @@
     <!-- Background Image dengan Kecerahan 30% dan Page Effect Zoom -->
     <div class="fixed inset-0 -z-10 w-full h-full overflow-hidden">
         <div class="w-full h-full bg-cover bg-center bg-zoom" style="background-image: url('sandvik_bg.jpg'); filter: brightness(0.3);"></div>
+    </div>
+
+    <!-- Toggle Toolbar (Dark Mode & Language) di Kanan Atas -->
+    <div class="fixed top-6 right-6 z-50 flex gap-3 animate-fade-in-up" style="animation-delay: 0.18s;">
+        <!-- Tombol Bilingual -->
+        <button onclick="toggleLanguage()" class="h-10 px-4 flex items-center gap-2 bg-white rounded-full text-xs font-bold text-slate-800 shadow-md hover:bg-slate-50 border border-slate-100 transition-all cursor-pointer" title="Toggle Language">
+            <i data-lucide="globe" class="w-4 h-4 text-red-500"></i>
+            <span id="lang-label" class="tracking-wide">ID</span>
+        </button>
+        <!-- Tombol Dark Mode -->
+        <button onclick="toggleDarkMode()" class="w-10 h-10 flex items-center justify-center bg-white rounded-2xl text-slate-800 shadow-md hover:bg-slate-50 border border-slate-100 transition-all cursor-pointer" title="Toggle Dark Mode">
+            <i data-lucide="moon" id="dark-mode-icon" class="w-4.5 h-4.5 text-slate-700"></i>
+        </button>
     </div>
 
     <!-- Container Utama untuk Menengahkan Form -->
@@ -65,19 +78,6 @@
                 </div>
                 <h1 class="text-3xl font-extrabold text-white tracking-tight drop-shadow-md" data-i18n="login.title">IT PORTAL</h1>
                 <p class="text-sm text-slate-200 mt-1 drop-shadow-sm" data-i18n="login.tagline">Satu Pintu Layanan Tim IT PT. Sandvik SMC</p>
-            </div>
-
-            <!-- Toggle Toolbar (Dark Mode & Language) -->
-            <div class="flex justify-center mb-4 animate-fade-in-up" style="animation-delay: 0.18s;">
-                <div class="portal-toolbar">
-                    <button onclick="toggleDarkMode()" class="toggle-btn" title="Toggle Dark Mode">
-                        <i data-lucide="moon" id="dark-mode-icon" class="w-3.5 h-3.5"></i>
-                    </button>
-                    <button onclick="toggleLanguage()" class="toggle-btn" title="Toggle Language">
-                        <i data-lucide="languages" class="w-3.5 h-3.5"></i>
-                        <span id="lang-label">EN</span>
-                    </button>
-                </div>
             </div>
 
             <!-- KARTU FORM LOGIN (Warna Putih Bersih) dengan Animasi Masuk -->
