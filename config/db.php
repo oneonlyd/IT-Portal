@@ -31,6 +31,12 @@ try {
     // Baris ini bisa diaktifkan sementara untuk testing. Nanti jika sudah sukses, baris ini harus dinonaktifkan/dihapus.
     // echo "Koneksi ke database berhasil!";
 } catch (\PDOException $e) {
-    // Jika koneksi gagal, tangkap error-nya dan tampilkan pesan error yang ramah.
-    die("Koneksi database gagal: " . $e->getMessage());
+    // Jika koneksi gagal, kembalikan respon JSON yang valid agar browser dapat menampilkan pesan error yang tepat
+    http_response_code(500);
+    header('Content-Type: application/json');
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Koneksi database gagal: ' . $e->getMessage()
+    ]);
+    exit;
 }
