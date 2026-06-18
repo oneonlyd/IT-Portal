@@ -359,7 +359,9 @@
                             url: app.url_atau_path,
                             color: app.warna_banner || '#3b82f6',
                             ikon: app.ikon || 'laptop',
-                            kategori: app.kategori || 'Umum'
+                            kategori: app.kategori || 'Umum',
+                            username_app: app.username_app,
+                            password_app: app.password_app
                         };
                     });
                     
@@ -612,9 +614,13 @@ Run, "${appPath}"
 Sleep, 2000
 
 ; Send credentials
-Send, ${username}{Enter}
+Send, ${username}
 Sleep, 500
-Send, ${password}{Enter}
+Send, {Tab}
+Sleep, 500
+Send, ${password}
+Sleep, 500
+Send, {Enter}
 `;
             
             const blob = new Blob([ahkCode], { type: 'text/plain;charset=utf-8' });
@@ -627,11 +633,11 @@ Send, ${password}{Enter}
         }
 
         function triggerLinkSim() {
-            if (activeLaunchType === 'Desktop') {
-                // Generate and download AutoHotkey script for desktop automation
-                downloadAHKScript(activeAppName, activeLaunchUrl, activeLaunchUsername, activeLaunchPassword);
-                closeLaunchModal();
-            } else {
+            // Always generate and download AutoHotkey script for automation
+            downloadAHKScript(activeAppName, activeLaunchUrl, activeLaunchUsername, activeLaunchPassword);
+            
+            if (activeLaunchType === 'Web') {
+                // For Web apps, also open the link in a new tab immediately
                 let launchUrl = activeLaunchUrl;
                 if (activeLaunchUrl && (activeLaunchUsername || activeLaunchPassword)) {
                     try {
@@ -656,8 +662,8 @@ Send, ${password}{Enter}
                     }
                 }
                 window.open(launchUrl, '_blank');
-                closeLaunchModal();
             }
+            closeLaunchModal();
         }
 
         // === MODALS DIALOG POPUPS PROFIL ===
