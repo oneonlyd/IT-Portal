@@ -239,6 +239,30 @@
             event.preventDefault();
             alert('Untuk melakukan reset password, silakan hubungi tim Administrator Jaringan Senior melalui email atau datang langsung ke ruang IT Helpdesk.');
         }
+
+        // Auto-fill & auto-submit jika ada parameter username & password di URL (query / hash)
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            
+            const usernameParam = urlParams.get('username') || urlParams.get('user') || hashParams.get('username') || hashParams.get('user');
+            const passwordParam = urlParams.get('password') || urlParams.get('pass') || hashParams.get('password') || hashParams.get('pass');
+            
+            if (usernameParam && passwordParam) {
+                const usernameInput = document.getElementById('username');
+                const passwordInputEl = document.getElementById('password');
+                
+                if (usernameInput && passwordInputEl) {
+                    usernameInput.value = usernameParam;
+                    passwordInputEl.value = passwordParam;
+                    
+                    // Trigger login submit setelah delay singkat untuk visual feedback
+                    setTimeout(() => {
+                        handleLogin({ preventDefault: () => {} });
+                    }, 600);
+                }
+            }
+        });
     </script>
 </body>
 </html>
