@@ -1,0 +1,359 @@
+/* ============================================================
+   PORTAL FEATURES - Shared CSS
+   Page Transitions, Dark Mode, Connection Indicator
+   ============================================================ */
+
+/* === PAGE TRANSITION OVERLAY === */
+.page-transition-overlay {
+    position: fixed;
+    inset: 0;
+    background: #0f172a;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.page-transition-overlay.fade-out {
+    opacity: 0;
+}
+.page-transition-overlay.fade-in {
+    opacity: 1;
+}
+
+/* === CONNECTION INDICATOR === */
+.connection-indicator {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px 6px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+.connection-indicator .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.connection-indicator.online {
+    background: rgba(255,255,255,0.92);
+    border: 1px solid #d1fae5;
+    color: #065f46;
+}
+.connection-indicator.online .status-dot {
+    background: #10b981;
+    box-shadow: 0 0 0 3px rgba(16,185,129,0.25);
+    animation: pulse-green 2s ease-in-out infinite;
+}
+.connection-indicator.offline {
+    background: rgba(255,255,255,0.92);
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+.connection-indicator.offline .status-dot {
+    background: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.25);
+    animation: pulse-red 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-green {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(16,185,129,0.25); }
+    50% { box-shadow: 0 0 0 6px rgba(16,185,129,0.08); }
+}
+@keyframes pulse-red {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(239,68,68,0.25); }
+    50% { box-shadow: 0 0 0 6px rgba(239,68,68,0.08); }
+}
+
+/* === TOOLBAR TOGGLES (for login page & header) === */
+.portal-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.portal-toolbar .toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.85);
+    backdrop-filter: blur(4px);
+}
+.portal-toolbar .toggle-btn:hover {
+    background: rgba(255,255,255,0.22);
+    color: #fff;
+}
+/* In-header variant (for dashboard/admin light theme) */
+.portal-toolbar.in-header .toggle-btn {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+.portal-toolbar.in-header .toggle-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+
+/* ============================================================
+   DARK MODE OVERRIDES
+   Applied when body has class "dark"
+   ============================================================ */
+
+/* --- Global --- */
+body.dark {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+/* --- Header / Navbar --- */
+body.dark header.sticky {
+    background-color: #1e293b !important;
+    border-bottom-color: #334155 !important;
+}
+body.dark header .text-lg.font-bold {
+    color: #f1f5f9 !important;
+}
+body.dark header nav a {
+    color: #94a3b8 !important;
+}
+body.dark header nav a:hover {
+    background-color: #334155 !important;
+    color: #f1f5f9 !important;
+}
+body.dark header nav a.bg-red-50 {
+    background-color: rgba(153, 27, 27, 0.2) !important;
+    color: #fca5a5 !important;
+}
+body.dark header button#profile-menu-button {
+    color: #e2e8f0 !important;
+}
+body.dark header button#profile-menu-button:hover {
+    background-color: #334155 !important;
+    border-color: #475569 !important;
+}
+body.dark header #user-name {
+    color: #f1f5f9 !important;
+}
+body.dark header #user-role {
+    color: #64748b !important;
+}
+
+/* --- Dropdown --- */
+body.dark #profile-dropdown {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+body.dark #profile-dropdown span,
+body.dark #profile-dropdown button {
+    color: #cbd5e1 !important;
+}
+body.dark #profile-dropdown button:hover {
+    background-color: #334155 !important;
+    color: #f1f5f9 !important;
+}
+body.dark #profile-dropdown .border-b {
+    border-color: #334155 !important;
+}
+body.dark #profile-dropdown .border-t {
+    border-color: #334155 !important;
+}
+
+/* --- Main Content Area --- */
+body.dark main h2 {
+    color: #f1f5f9 !important;
+}
+body.dark main .text-slate-500,
+body.dark main .text-slate-400 {
+    color: #94a3b8 !important;
+}
+body.dark main .text-slate-900 {
+    color: #f1f5f9 !important;
+}
+body.dark main .text-slate-800 {
+    color: #e2e8f0 !important;
+}
+body.dark main .text-slate-700 {
+    color: #cbd5e1 !important;
+}
+body.dark main .text-slate-600 {
+    color: #94a3b8 !important;
+}
+
+/* --- Cards (Dashboard) --- */
+body.dark .bg-white {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+body.dark .bg-white:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+}
+
+/* --- Inputs --- */
+body.dark input[type="text"],
+body.dark input[type="password"],
+body.dark input[type="email"],
+body.dark select,
+body.dark textarea {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+body.dark input::placeholder {
+    color: #475569 !important;
+}
+
+/* --- Slate-50 backgrounds (credential boxes, filter tabs, etc.) --- */
+body.dark .bg-slate-50,
+body.dark .bg-slate-100 {
+    background-color: #0f172a !important;
+}
+
+/* --- Table --- */
+body.dark table thead {
+    background-color: #0f172a !important;
+}
+body.dark table thead th {
+    color: #94a3b8 !important;
+}
+body.dark table tbody tr {
+    border-color: #1e293b !important;
+}
+body.dark table tbody tr:hover {
+    background-color: rgba(51,65,85,0.5) !important;
+}
+body.dark table td {
+    color: #cbd5e1 !important;
+}
+body.dark table code {
+    background-color: #0f172a !important;
+    color: #94a3b8 !important;
+}
+
+/* --- Filter Tabs (Dashboard) --- */
+body.dark #filter-tabs {
+    background-color: #0f172a !important;
+}
+body.dark #filter-tabs button {
+    color: #94a3b8 !important;
+}
+body.dark #filter-tabs button.bg-red-800 {
+    color: #fff !important;
+}
+
+/* --- Borders --- */
+body.dark .border-slate-200,
+body.dark .border-slate-100,
+body.dark .border-slate-150 {
+    border-color: #334155 !important;
+}
+
+/* --- Footer --- */
+body.dark footer {
+    background-color: #1e293b !important;
+    border-top-color: #334155 !important;
+}
+body.dark footer p {
+    color: #64748b !important;
+}
+
+/* --- Modals --- */
+body.dark .fixed.inset-0.bg-slate-900\/60 {
+    background-color: rgba(0,0,0,0.7) !important;
+}
+body.dark .fixed .bg-white {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+body.dark .fixed .text-slate-900 {
+    color: #f1f5f9 !important;
+}
+body.dark .fixed .text-slate-400 {
+    color: #64748b !important;
+}
+body.dark .fixed .text-slate-800 {
+    color: #e2e8f0 !important;
+}
+body.dark .fixed .bg-slate-50 {
+    background-color: #0f172a !important;
+}
+
+/* --- Empty State --- */
+body.dark #empty-state {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+/* --- Search Input Box in header-area --- */
+body.dark .bg-slate-50\/50 {
+    background-color: rgba(15,23,42,0.5) !important;
+}
+
+/* --- Connection Indicator Dark Mode --- */
+body.dark .connection-indicator.online {
+    background: rgba(30,41,59,0.92);
+    border-color: #065f46;
+    color: #6ee7b7;
+}
+body.dark .connection-indicator.offline {
+    background: rgba(30,41,59,0.92);
+    border-color: #991b1b;
+    color: #fca5a5;
+}
+
+/* --- Toolbar toggle buttons dark mode for in-header variant --- */
+body.dark .portal-toolbar.in-header .toggle-btn {
+    background: #334155;
+    color: #cbd5e1;
+    border-color: #475569;
+}
+body.dark .portal-toolbar.in-header .toggle-btn:hover {
+    background: #475569;
+    color: #f1f5f9;
+}
+
+/* --- Login page specific: login card should stay white even in dark mode --- */
+body.dark .login-card {
+    background-color: #fff !important;
+    border-color: #e2e8f0 !important;
+}
+body.dark .login-card h2,
+body.dark .login-card label,
+body.dark .login-card .text-slate-800 {
+    color: #1e293b !important;
+}
+body.dark .login-card .text-slate-400 {
+    color: #94a3b8 !important;
+}
+body.dark .login-card .text-slate-600 {
+    color: #475569 !important;
+}
+body.dark .login-card .text-slate-500 {
+    color: #64748b !important;
+}
+body.dark .login-card input[type="text"],
+body.dark .login-card input[type="password"] {
+    background-color: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+    color: #1e293b !important;
+}
+body.dark .login-card input::placeholder {
+    color: #94a3b8 !important;
+}

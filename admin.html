@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Lucide Icons via CDN untuk visual ikon profesional -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Portal Features: Shared CSS -->
+    <link rel="stylesheet" href="portal-features.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -17,6 +19,9 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between antialiased">
+
+    <!-- Page Transition Overlay -->
+    <div id="page-transition-overlay" class="page-transition-overlay"></div>
 
     <!-- === HEADER NAVBAR === -->
     <header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
@@ -38,17 +43,28 @@
                     <nav class="hidden md:flex items-center gap-1">
                         <a href="dashboard.html" class="px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg text-sm font-medium flex items-center gap-1.5">
                             <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-                            Dashboard
+                            <span data-i18n="dash.nav.dashboard">Dashboard</span>
                         </a>
                         <a href="admin.html" class="px-4 py-2 bg-red-50 text-red-800 rounded-lg text-sm font-semibold flex items-center gap-1.5">
                             <i data-lucide="settings" class="w-4 h-4"></i>
-                            Admin Panel (Kelola)
+                            <span data-i18n="dash.nav.admin">Admin Panel (Kelola)</span>
                         </a>
                     </nav>
                 </div>
 
-                <!-- SISI KANAN: User Profile Dropdown -->
-                <div class="flex items-center gap-4">
+                <!-- SISI KANAN: Toggles + User Profile Dropdown -->
+                <div class="flex items-center gap-3">
+                    <!-- Dark Mode & Language Toggles -->
+                    <div class="portal-toolbar in-header">
+                        <button onclick="toggleDarkMode()" class="toggle-btn" title="Toggle Dark Mode">
+                            <i data-lucide="moon" id="dark-mode-icon" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <button onclick="toggleLanguage()" class="toggle-btn" title="Toggle Language">
+                            <i data-lucide="languages" class="w-3.5 h-3.5"></i>
+                            <span id="lang-label">EN</span>
+                        </button>
+                    </div>
+
                     <div class="relative">
                         <button 
                             id="profile-menu-button"
@@ -68,26 +84,26 @@
                         <!-- Dropdown Menu (Tersembunyi secara default) -->
                         <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 z-50 py-1.5">
                             <div class="px-4 py-2 border-b border-slate-50 mb-1">
-                                <span class="block text-xs text-slate-400 font-medium">Masuk Sebagai:</span>
+                                <span class="block text-xs text-slate-400 font-medium" data-i18n="dash.loginAs">Masuk Sebagai:</span>
                                 <span class="block text-sm font-bold text-slate-800 truncate" id="dropdown-fullname">IT Admin Pratama</span>
                                 <span class="block text-[10px] text-slate-500 truncate mt-0.5">admin.portal@perusahaan.com</span>
                             </div>
 
                             <button onclick="showProfileModal()" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 flex items-center gap-2 cursor-pointer">
                                 <i data-lucide="user" class="w-4 h-4 text-slate-400"></i>
-                                Detail Profil
+                                <span data-i18n="dash.profileBtn">Detail Profil</span>
                             </button>
 
                             <button onclick="showSettingsModal()" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 flex items-center gap-2 cursor-pointer">
                                 <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i>
-                                Pengaturan
+                                <span data-i18n="dash.settingsBtn">Pengaturan</span>
                             </button>
 
                             <div class="border-t border-slate-100 my-1"></div>
 
                             <button onclick="handleLogout()" class="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 hover:text-red-850 flex items-center gap-2 font-medium cursor-pointer">
                                 <i data-lucide="log-out" class="w-4 h-4"></i>
-                                Log out
+                                <span data-i18n="dash.logoutBtn">Log out</span>
                             </button>
                         </div>
                     </div>
@@ -104,11 +120,11 @@
         <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-5 pb-5 border-b border-slate-200">
             <div>
                 <div class="flex items-center gap-2">
-                    <span class="text-xs bg-red-100 text-red-800 font-bold px-2.5 py-0.5 rounded-md">ADMIN HAK AKSES</span>
-                    <span class="text-xs text-slate-400 font-medium">Panel Kontrol Portal</span>
+                    <span class="text-xs bg-red-100 text-red-800 font-bold px-2.5 py-0.5 rounded-md" data-i18n="admin.badge">ADMIN HAK AKSES</span>
+                    <span class="text-xs text-slate-400 font-medium" data-i18n="admin.badgeSub">Panel Kontrol Portal</span>
                 </div>
-                <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Manajemen Aplikasi</h2>
-                <p class="text-sm text-slate-500 mt-1">Kelola daftar portal aplikasi yang terbit di dashboard, ubah nama, deskripsi, warna, sertakan path.</p>
+                <h2 class="text-2xl font-extrabold text-slate-900 mt-1" data-i18n="admin.title">Manajemen Aplikasi</h2>
+                <p class="text-sm text-slate-500 mt-1" data-i18n="admin.subtitle">Kelola daftar portal aplikasi yang terbit di dashboard, ubah nama, deskripsi, warna, sertakan path.</p>
             </div>
 
             <!-- Tombol Tambah Aplikasi Baru (Memanggil modal popup) -->
@@ -118,7 +134,7 @@
                     class="px-5 py-2.5 bg-red-800 hover:bg-red-900 active:bg-red-950 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
                 >
                     <i data-lucide="plus" class="w-4 h-4"></i>
-                    Tambah Aplikasi
+                    <span data-i18n="admin.addBtn">Tambah Aplikasi</span>
                 </button>
             </div>
         </div>
@@ -128,7 +144,7 @@
             
             <!-- Pencarian di Area Tabel Admin -->
             <div class="p-4 bg-slate-50/50 border-b border-slate-150 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Daftar Aplikasi Aktif (<span id="count-total">0</span>)</span>
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider"><span data-i18n="admin.tableActive">Daftar Aplikasi Aktif</span> (<span id="count-total">0</span>)</span>
                 
                 <div class="relative w-full sm:w-64">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400">
@@ -138,6 +154,7 @@
                         type="text" 
                         id="table-search" 
                         oninput="filterTable()" 
+                        data-i18n-placeholder="admin.searchTable"
                         placeholder="Cari dalam tabel..." 
                         class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-red-800 focus:ring-1 focus:ring-red-200 transition-all font-medium"
                     >
@@ -149,11 +166,11 @@
                 <table class="w-full text-left border-collapse table-auto">
                     <thead>
                         <tr class="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
-                            <th class="px-6 py-3 w-[25%] text-left">Nama Aplikasi</th>
-                            <th class="px-6 py-3 w-[15%] text-left">Tipe Portal</th>
-                            <th class="px-6 py-3 w-[35%] text-left font-mono">URL/Path Executable</th>
-                            <th class="px-6 py-3 w-[15%] text-left">Visual Banner</th>
-                            <th class="px-6 py-3 w-[10%] text-center">Aksi Kerja</th>
+                            <th class="px-6 py-3 w-[25%] text-left" data-i18n="admin.colName">Nama Aplikasi</th>
+                            <th class="px-6 py-3 w-[15%] text-left" data-i18n="admin.colType">Tipe Portal</th>
+                            <th class="px-6 py-3 w-[35%] text-left font-mono" data-i18n="admin.colUrl">URL/Path Executable</th>
+                            <th class="px-6 py-3 w-[15%] text-left" data-i18n="admin.colVisual">Visual Banner</th>
+                            <th class="px-6 py-3 w-[10%] text-center" data-i18n="admin.colAction">Aksi Kerja</th>
                         </tr>
                     </thead>
                     <tbody id="admin-table-body" class="divide-y divide-slate-100 text-xs">
@@ -164,7 +181,7 @@
 
             <!-- Bagian Footer Tabel Informasi -->
             <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 text-[11px] text-slate-400 flex items-center justify-between">
-                <span>* Berhasil disinkronisasi ke memori runtime client secara optimal.</span>
+                <span data-i18n="admin.footerNote">* Berhasil disinkronisasi ke memori runtime client secara optimal.</span>
                 <span>Total Aktif: <span id="count-summary">0</span> Portals</span>
             </div>
 
@@ -172,7 +189,7 @@
 
         <!-- Tombol navigasi kembali -->
         <div class="mt-6 text-center">
-            <a href="dashboard.html" class="text-xs text-red-800 hover:underline inline-flex items-center gap-1 font-semibold">
+            <a href="dashboard.html" class="text-xs text-red-800 hover:underline inline-flex items-center gap-1 font-semibold" data-i18n="admin.backLink">
                 ← Kembali ke Beranda Portal Utama
             </a>
         </div>
@@ -182,7 +199,7 @@
     <!-- === FOOTER HALAMAN === -->
     <footer class="bg-white border-t border-slate-200 py-6 mt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-400">
-            <p>© 2026 IT Internship - Devina Setya Maharani</p>
+            <p data-i18n="dash.copyright">© 2026 IT Internship - Devina Setya Maharani</p>
         </div>
     </footer>
 
@@ -201,7 +218,7 @@
             <!-- Judul Form (Disesuaikan lewat JS) -->
             <h3 id="form-modal-title" class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-1.5 text-red-850">
                 <i data-lucide="plus" class="w-5 h-5 text-red-800"></i>
-                Tambah Aplikasi Baru
+                <span data-i18n="admin.form.addTitle">Tambah Aplikasi Baru</span>
             </h3>
 
             <!-- Form input -->
@@ -209,7 +226,7 @@
                 <input type="hidden" id="app-id">
 
                 <div>
-                    <label for="app-name" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Nama Aplikasi</label>
+                    <label for="app-name" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5" data-i18n="admin.form.appName">Nama Aplikasi</label>
                     <input 
                         type="text" 
                         id="app-name" 
@@ -221,7 +238,7 @@
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label for="app-type" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Tipe Portal</label>
+                        <label for="app-type" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5" data-i18n="admin.form.portalType">Tipe Portal</label>
                         <select 
                             id="app-type" 
                             onchange="adjustFormPlaceholder()"
@@ -233,7 +250,7 @@
                     </div>
 
                     <div>
-                        <label for="app-color" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Model Warna Banner</label>
+                        <label for="app-color" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5" data-i18n="admin.form.colorModel">Model Warna Banner</label>
                         <select 
                             id="app-color" 
                             class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1"
@@ -250,7 +267,7 @@
                 </div>
 
                 <div>
-                    <label id="app-url-label" for="app-url" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">URL Aplikasi (Web)</label>
+                    <label id="app-url-label" for="app-url" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5" data-i18n="admin.form.urlLabel">URL Aplikasi (Web)</label>
                     <input 
                         type="text" 
                         id="app-url" 
@@ -262,7 +279,7 @@
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label for="app-username" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Username Portal</label>
+                        <label for="app-username" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5" data-i18n="admin.form.username">Username Portal</label>
                         <input 
                             type="text" 
                             id="app-username" 
@@ -272,7 +289,7 @@
                         >
                     </div>
                     <div>
-                        <label for="app-password" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Password Portal</label>
+                        <label for="app-password" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5" data-i18n="admin.form.password">Password Portal</label>
                         <input 
                             type="text" 
                             id="app-password" 
@@ -285,7 +302,7 @@
 
                 <!-- Petunjuk Simpan -->
                 <div class="bg-indigo-50/50 p-3 rounded-lg border border-indigo-100 text-[11px] text-indigo-805 leading-relaxed">
-                    <strong>Penting:</strong> Menambahkan atau mengedit aplikasi melalui interface ini akan langsung memperbarui data internal aplikasi browser Anda secara seketika.
+                    <strong data-i18n="admin.form.important">Penting:</strong> <span data-i18n="admin.form.importantNote">Menambahkan atau mengedit aplikasi melalui interface ini akan langsung memperbarui data internal aplikasi browser Anda secara seketika.</span>
                 </div>
 
                 <!-- Bagian Tombol Aksi Form -->
@@ -293,6 +310,7 @@
                     <button 
                         type="submit" 
                         class="flex-1 py-2.5 bg-red-800 hover:bg-red-900 text-white rounded-xl text-xs font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
+                        data-i18n="admin.form.save"
                     >
                         Simpan & Terbitkan
                     </button>
@@ -300,6 +318,7 @@
                         type="button" 
                         onclick="closeFormModal()"
                         class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold active:scale-95 transition-all cursor-pointer"
+                        data-i18n="admin.form.cancel"
                     >
                         Batal
                     </button>
@@ -324,15 +343,15 @@
                 <p class="text-xs text-indigo-600 font-semibold mt-1.5">Senior System Administrator</p>
                 <div class="mt-5 space-y-3 text-left text-xs text-slate-600">
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <span class="block text-[10px] text-slate-400 font-bold uppercase">ID Pengguna</span>
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase" data-i18n="modal.profile.userId">ID Pengguna</span>
                         <span class="font-mono text-slate-800 mt-1 block">it.admin</span>
                     </div>
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <span class="block text-[10px] text-slate-400 font-bold uppercase">Email Kantor</span>
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase" data-i18n="modal.profile.email">Email Kantor</span>
                         <span class="text-slate-800 mt-1 block">admin.portal@perusahaan.com</span>
                     </div>
                 </div>
-                <button onclick="closeProfileModal()" class="w-full mt-6 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold shadow-md transition-all cursor-pointer">
+                <button onclick="closeProfileModal()" class="w-full mt-6 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold shadow-md transition-all cursor-pointer" data-i18n="modal.profile.close">
                     Tutup
                 </button>
             </div>
@@ -347,28 +366,31 @@
             </button>
             <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                 <i data-lucide="settings" class="w-5 h-5 text-red-800"></i>
-                Pengaturan Akun
+                <span data-i18n="modal.settings.title">Pengaturan Akun</span>
             </h3>
             <form onsubmit="saveSettings(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Nama Lengkap</label>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1.5" data-i18n="modal.settings.fullname">Nama Lengkap</label>
                     <input type="text" id="settings-fullname" value="IT Admin Pratama" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1" required>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Role/Jabatan</label>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1.5" data-i18n="modal.settings.role">Role/Jabatan</label>
                     <input type="text" id="settings-role" value="Senior System Administrator" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1" required>
                 </div>
-                <div class="bg-slate-50 p-3 rounded-lg text-[11px] text-slate-500">
+                <div class="bg-slate-50 p-3 rounded-lg text-[11px] text-slate-500" data-i18n="modal.settings.note">
                     Pengaturan disimpan secara lokal pada memori browser untuk simulasi frontend.
                 </div>
                 <div class="mt-5 flex gap-3">
-                    <button type="submit" class="flex-1 py-2 bg-red-800 hover:bg-red-900 text-white rounded-xl text-xs font-semibold transition-all shadow-md cursor-pointer">Simpan</button>
-                    <button type="button" onclick="closeSettingsModal()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all cursor-pointer">Batal</button>
+                    <button type="submit" class="flex-1 py-2 bg-red-800 hover:bg-red-900 text-white rounded-xl text-xs font-semibold transition-all shadow-md cursor-pointer" data-i18n="modal.settings.save">Simpan</button>
+                    <button type="button" onclick="closeSettingsModal()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all cursor-pointer" data-i18n="modal.settings.cancel">Batal</button>
                 </div>
             </form>
         </div>
     </div>
 
+
+    <!-- Portal Features: Shared JS -->
+    <script src="portal-features.js"></script>
 
     <!-- === JAVASCRIPT LOGIC DENGAN FITUR CRUD LOKAL === -->
     <script>
@@ -395,7 +417,7 @@
             // Proteksi Halaman: Hanya admin/superadmin yang boleh masuk
             if (savedRole !== 'admin' && savedRole !== 'superadmin') {
                 alert('Akses Ditolak! Halaman ini khusus untuk Administrator.');
-                window.location.href = 'dashboard.html';
+                navigateTo('dashboard.html');
                 return;
             }
 
@@ -413,7 +435,7 @@
             fetch('admin/admin_app.php')
             .then(res => {
                 if (res.status === 401 || res.status === 403) {
-                    window.location.href = 'login.html';
+                    navigateTo('login.html');
                     return;
                 }
                 return res.json();
@@ -485,7 +507,7 @@
                     <!-- Kolom Nama & Deskripsi -->
                     <td class="px-6 py-4">
                         <div class="font-bold text-slate-900">${app.name}</div>
-                        <div class="text-[10px] text-slate-450 mt-0.5">${app.desc || 'Tanpa deskripsi'}</div>
+                        <div class="text-[10px] text-slate-450 mt-0.5">${app.desc || t('admin.form.noDesc')}</div>
                         <div class="text-[10px] text-slate-500 font-mono mt-1">
                             U: <span class="font-semibold select-all text-slate-700">${app.username}</span> | P: <span class="font-semibold select-all text-slate-700">${app.password ? '••••••••' : '-'}</span>
                         </div>
@@ -556,17 +578,17 @@
             const labelUrl = document.getElementById('app-url-label');
 
             if (type === 'Web') {
-                labelUrl.innerText = "URL Aplikasi (Web)";
+                labelUrl.innerText = t('admin.form.urlLabel');
                 inputUrl.placeholder = "https://helpdesk.internal.it";
             } else {
-                labelUrl.innerText = "Path Eksekusi File (Desktop OS Client)";
+                labelUrl.innerText = t('admin.form.urlLabelDesktop');
                 inputUrl.placeholder = "C:\\Path\\Aplikasi\\NamaFile.exe";
             }
         }
 
         // Buka modal untuk Tambah Aplikasi
         function openAddModal() {
-            document.getElementById('form-modal-title').innerHTML = `<i data-lucide="plus" class="w-5 h-5 text-red-800"></i> Tambah Aplikasi Baru`;
+            document.getElementById('form-modal-title').innerHTML = `<i data-lucide="plus" class="w-5 h-5 text-red-800"></i> ${t('admin.form.addTitle')}`;
             document.getElementById('app-id').value = '';
             document.getElementById('app-name').value = '';
             document.getElementById('app-type').value = 'Web';
@@ -715,8 +737,9 @@
             if(confirm('Lakukan logout dari user portal ini?')) {
                 localStorage.removeItem('currentUser');
                 localStorage.removeItem('currentUserRole');
-                window.location.href = 'api/logout.php';
+                navigateTo('api/logout.php');
             }
+        }
     </script>
 </body>
 </html>
