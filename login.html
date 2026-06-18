@@ -14,19 +14,42 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        @keyframes zoom-in-out {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .bg-zoom {
+            animation: zoom-in-out 30s ease-in-out infinite;
+        }
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0; /* Fallback for initial state before animation runs */
+        }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-800 min-h-screen flex flex-col justify-between antialiased relative">
+<body class="bg-slate-900 text-slate-800 min-h-screen flex flex-col justify-between antialiased relative overflow-x-hidden">
 
-    <!-- Background Image dengan Kecerahan 40% -->
-    <div class="fixed inset-0 -z-10 w-full h-full bg-cover bg-center" style="background-image: url('sandvik_bg.jpg'); filter: brightness(0.4);"></div>
+    <!-- Background Image dengan Kecerahan 30% dan Page Effect Zoom -->
+    <div class="fixed inset-0 -z-10 w-full h-full overflow-hidden">
+        <div class="w-full h-full bg-cover bg-center bg-zoom" style="background-image: url('sandvik_bg.jpg'); filter: brightness(0.3);"></div>
+    </div>
 
     <!-- Container Utama untuk Menengahkan Form -->
     <div class="flex-1 flex flex-col justify-center items-center px-4 py-12">
         <div class="w-full max-w-md">
             
             <!-- LOGO & BRAND PORTAL DI ATAS FORM -->
-            <div class="text-center mb-8">
+            <div class="text-center mb-8 animate-fade-in-up" style="animation-delay: 0.1s;">
                 <!-- Ikon Komputer Laptop tema merah tua (red-800) -->
                 <div class="inline-flex items-center justify-center bg-red-800 text-white p-3 rounded-2xl shadow-md mb-4 ring-4 ring-red-800/30">
                     <i data-lucide="laptop" class="w-8 h-8"></i>
@@ -35,8 +58,8 @@
                 <p class="text-sm text-slate-200 mt-1 drop-shadow-sm">Satu Pintu Layanan Tim IT PT. Sandvik SMC</p>
             </div>
 
-            <!-- KARTU FORM LOGIN (Warna Putih Bersih) -->
-            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
+            <!-- KARTU FORM LOGIN (Warna Putih Bersih) dengan Animasi Masuk -->
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 animate-fade-in-up" style="animation-delay: 0.25s;">
                 <div class="mb-6">
                     <h2 class="text-xl font-bold text-slate-800">Masuk ke Portal</h2>
                     <p class="text-xs text-slate-400 mt-1">Gunakan akun admin atau kredensial IT Anda</p>
