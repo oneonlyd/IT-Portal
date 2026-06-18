@@ -74,41 +74,77 @@
     50% { box-shadow: 0 0 0 6px rgba(239,68,68,0.08); }
 }
 
-/* === TOOLBAR TOGGLES (for login page & header) === */
-.portal-toolbar {
+/* === PORTAL TOGGLES (Bilingual Pill & Dark Mode Square) === */
+.portal-toggles {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.portal-toggles .btn-lang {
+    height: 38px;
+    padding: 0 14px;
     display: flex;
     align-items: center;
     gap: 6px;
-}
-.portal-toolbar .toggle-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    padding: 5px 12px;
-    border-radius: 10px;
+    background: #ffffff;
+    color: #1e293b;
+    border: 1px solid #e2e8f0;
+    border-radius: 9999px;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 1px solid transparent;
-    background: rgba(255,255,255,0.12);
-    color: rgba(255,255,255,0.85);
-    backdrop-filter: blur(4px);
 }
-.portal-toolbar .toggle-btn:hover {
-    background: rgba(255,255,255,0.22);
-    color: #fff;
+.portal-toggles .btn-lang:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
 }
-/* In-header variant (for dashboard/admin light theme) */
-.portal-toolbar.in-header .toggle-btn {
-    background: #f1f5f9;
+.portal-toggles .btn-lang i {
+    width: 16px;
+    height: 16px;
+    color: #ef4444; /* globe icon is red */
+}
+.portal-toggles .btn-dark {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
     color: #475569;
     border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
-.portal-toolbar.in-header .toggle-btn:hover {
-    background: #e2e8f0;
-    color: #1e293b;
+.portal-toggles .btn-dark:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+.portal-toggles .btn-dark i {
+    width: 18px;
+    height: 18px;
+}
+
+/* Dark mode for portal toggles */
+body.dark .portal-toggles .btn-lang {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-color: #334155;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25);
+}
+body.dark .portal-toggles .btn-dark {
+    background: #1e293b;
+    color: #cbd5e1;
+    border-color: #334155;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25);
+}
+body.dark .portal-toggles .btn-lang:hover,
+body.dark .portal-toggles .btn-dark:hover {
+    background: #334155;
+    border-color: #475569;
 }
 
 
@@ -329,31 +365,81 @@ body.dark .portal-toolbar.in-header .toggle-btn:hover {
     color: #f1f5f9;
 }
 
-/* --- Login page specific: login card should stay white even in dark mode --- */
+/* --- Login page specific dark mode styles --- */
 body.dark .login-card {
-    background-color: #fff !important;
-    border-color: #e2e8f0 !important;
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
 }
 body.dark .login-card h2,
-body.dark .login-card label,
 body.dark .login-card .text-slate-800 {
-    color: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+body.dark .login-card label,
+body.dark .login-card .text-slate-600 {
+    color: #cbd5e1 !important;
 }
 body.dark .login-card .text-slate-400 {
     color: #94a3b8 !important;
 }
-body.dark .login-card .text-slate-600 {
-    color: #475569 !important;
-}
 body.dark .login-card .text-slate-500 {
-    color: #64748b !important;
+    color: #94a3b8 !important;
 }
 body.dark .login-card input[type="text"],
 body.dark .login-card input[type="password"] {
-    background-color: #f8fafc !important;
-    border-color: #e2e8f0 !important;
-    color: #1e293b !important;
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
 }
 body.dark .login-card input::placeholder {
+    color: #475569 !important;
+}
+body.dark .login-card #toggle-password {
     color: #94a3b8 !important;
+}
+body.dark .login-card #toggle-password:hover {
+    color: #cbd5e1 !important;
+}
+body.dark .login-card .text-red-805,
+body.dark .login-card .text-red-800 {
+    color: #f87171 !important; /* Lupa password gets lighter red in dark mode */
+}
+
+/* --- Modal & Custom Text Dark Mode Adjustments --- */
+body.dark .fixed .text-slate-750,
+body.dark .fixed .text-slate-700 {
+    color: #cbd5e1 !important;
+}
+body.dark .fixed .text-slate-650,
+body.dark .fixed .text-slate-600 {
+    color: #cbd5e1 !important;
+}
+body.dark .fixed .text-slate-500 {
+    color: #94a3b8 !important;
+}
+body.dark .fixed .bg-red-50 {
+    background-color: rgba(153, 27, 27, 0.2) !important;
+    color: #fca5a5 !important;
+}
+body.dark .fixed .bg-slate-100 {
+    background-color: #0f172a !important;
+}
+body.dark .fixed .text-slate-700.hover\:text-slate-900:hover {
+    color: #fff !important;
+}
+body.dark .fixed .hover\:bg-slate-50:hover {
+    background-color: #334155 !important;
+}
+body.dark .text-indigo-650,
+body.dark .text-indigo-600 {
+    color: #818cf8 !important;
+}
+body.dark .bg-indigo-50\/50 {
+    background-color: rgba(30, 41, 59, 0.5) !important;
+}
+body.dark .border-indigo-100 {
+    border-color: #334155 !important;
+}
+body.dark .text-indigo-805 {
+    color: #cbd5e1 !important;
 }

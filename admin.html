@@ -55,13 +55,13 @@
                 <!-- SISI KANAN: Toggles + User Profile Dropdown -->
                 <div class="flex items-center gap-3">
                     <!-- Dark Mode & Language Toggles -->
-                    <div class="portal-toolbar in-header">
-                        <button onclick="toggleDarkMode()" class="toggle-btn" title="Toggle Dark Mode">
-                            <i data-lucide="moon" id="dark-mode-icon" class="w-3.5 h-3.5"></i>
-                        </button>
-                        <button onclick="toggleLanguage()" class="toggle-btn" title="Toggle Language">
-                            <i data-lucide="languages" class="w-3.5 h-3.5"></i>
+                    <div class="portal-toggles">
+                        <button onclick="toggleLanguage()" class="btn-lang" title="Toggle Language">
+                            <i data-lucide="globe"></i>
                             <span id="lang-label">EN</span>
+                        </button>
+                        <button onclick="toggleDarkMode()" class="btn-dark" title="Toggle Dark Mode">
+                            <i data-lucide="moon" id="dark-mode-icon"></i>
                         </button>
                     </div>
 

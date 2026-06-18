@@ -54,16 +54,16 @@
 
                 <!-- SISI KANAN: Toggles + User Profile Dropdown -->
                 <div class="flex items-center gap-3">
-                    <!-- Dark Mode & Language Toggles -->
-                    <div class="portal-toolbar in-header">
-                        <button onclick="toggleDarkMode()" class="toggle-btn" title="Toggle Dark Mode">
-                            <i data-lucide="moon" id="dark-mode-icon" class="w-3.5 h-3.5"></i>
-                        </button>
-                        <button onclick="toggleLanguage()" class="toggle-btn" title="Toggle Language">
-                            <i data-lucide="languages" class="w-3.5 h-3.5"></i>
-                            <span id="lang-label">EN</span>
-                        </button>
-                    </div>
+                        <!-- Dark Mode & Language Toggles -->
+                        <div class="portal-toggles">
+                            <button onclick="toggleLanguage()" class="btn-lang" title="Toggle Language">
+                                <i data-lucide="globe"></i>
+                                <span id="lang-label">EN</span>
+                            </button>
+                            <button onclick="toggleDarkMode()" class="btn-dark" title="Toggle Dark Mode">
+                                <i data-lucide="moon" id="dark-mode-icon"></i>
+                            </button>
+                        </div>
 
                     <div class="relative">
                         <button 
@@ -422,15 +422,27 @@
                 // Icon tipe app
                 const iconName = app.type === 'Web' ? 'globe' : 'monitor';
                 
+                const isOnline = navigator.onLine;
+                const badgeBgClass = isOnline ? 'bg-green-500/25' : 'bg-red-500/25';
+                const dotColorClass = isOnline ? 'bg-green-400' : 'bg-red-400';
+                const connectionText = isOnline ? t('connection.online') : t('connection.offline');
+                
                 // Menggunakan background-color inline style dari database
                 card.innerHTML = `
                     <!-- Banner Visual Kartu -->
-                    <div class="h-24 relative p-4 flex flex-col justify-between overflow-hidden" style="background-color: ${app.color};">
+                    <div class="h-24 relative p-4 flex justify-between items-start overflow-hidden" style="background-color: ${app.color};">
                         <div class="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/10 opacity-60"></div>
                         <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-300 pointer-events-none">
                             <i data-lucide="${iconName}" class="w-20 h-20 text-white"></i>
                         </div>
-                        <span class="self-end bg-black/30 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 z-10">
+                        
+                        <!-- Connection Status Indicator -->
+                        <span class="connection-card-badge ${badgeBgClass} text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 z-10">
+                            <span class="status-dot w-1.5 h-1.5 rounded-full ${dotColorClass}"></span>
+                            <span class="status-text">${connectionText}</span>
+                        </span>
+
+                        <span class="bg-black/30 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 z-10">
                             <i data-lucide="${iconName}" class="w-2.5 h-2.5"></i>
                             ${app.type}
                         </span>

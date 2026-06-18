@@ -283,25 +283,50 @@ function createConnectionIndicator() {
  */
 function updateConnectionIndicator() {
     const indicator = document.getElementById('connection-indicator');
-    if (!indicator) return;
-
     const online = navigator.onLine;
-    const textEl = document.getElementById('connection-text');
 
-    if (online) {
-        indicator.className = 'connection-indicator online';
-        if (textEl) textEl.textContent = t('connection.online');
-    } else {
-        indicator.className = 'connection-indicator offline';
-        if (textEl) textEl.textContent = t('connection.offline');
+    // 1. Update global floating connection indicator if it exists (e.g. legacy support)
+    if (indicator) {
+        const textEl = document.getElementById('connection-text');
+        if (online) {
+            indicator.className = 'connection-indicator online';
+            if (textEl) textEl.textContent = t('connection.online');
+        } else {
+            indicator.className = 'connection-indicator offline';
+            if (textEl) textEl.textContent = t('connection.offline');
+        }
     }
+
+    // 2. Update card connection badges dynamically
+    document.querySelectorAll('.connection-card-badge').forEach(badge => {
+        const dot = badge.querySelector('.status-dot');
+        const textSpan = badge.querySelector('.status-text');
+        
+        if (online) {
+            badge.className = 'connection-card-badge bg-green-500/25 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 z-10';
+            if (dot) {
+                dot.className = 'status-dot w-1.5 h-1.5 rounded-full bg-green-400';
+            }
+            if (textSpan) {
+                textSpan.textContent = t('connection.online');
+            }
+        } else {
+            badge.className = 'connection-card-badge bg-red-500/25 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 z-10';
+            if (dot) {
+                dot.className = 'status-dot w-1.5 h-1.5 rounded-full bg-red-400';
+            }
+            if (textSpan) {
+                textSpan.textContent = t('connection.offline');
+            }
+        }
+    });
 }
 
 /**
  * Initialize connection listeners
  */
 function initConnectionIndicator() {
-    createConnectionIndicator();
+    // createConnectionIndicator(); // Commented out to prevent injecting global bottom-right indicator
     updateConnectionIndicator();
 
     window.addEventListener('online', updateConnectionIndicator);
