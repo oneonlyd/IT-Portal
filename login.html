@@ -20,6 +20,10 @@
         }
         .bg-zoom {
             animation: zoom-in-out 30s ease-in-out infinite;
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
         }
         @keyframes fade-in-up {
             from {
