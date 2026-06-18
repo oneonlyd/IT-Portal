@@ -86,7 +86,6 @@
                             <div class="px-4 py-2 border-b border-slate-50 mb-1">
                                 <span class="block text-xs text-slate-400 font-medium" data-i18n="dash.loginAs">Masuk Sebagai:</span>
                                 <span class="block text-sm font-bold text-slate-800 truncate" id="dropdown-fullname">IT Admin Pratama</span>
-                                <span class="block text-[10px] text-slate-500 truncate mt-0.5">admin.portal@perusahaan.com</span>
                             </div>
 
                             <button onclick="showProfileModal()" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 flex items-center gap-2 cursor-pointer">
@@ -204,19 +203,15 @@
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <div class="text-center py-2">
-                <div class="w-20 h-20 rounded-full bg-red-800/10 border-2 border-red-800/20 flex items-center justify-center text-red-800 font-extrabold text-3xl shadow-sm mx-auto mb-4">
+                <div id="modal-profile-avatar" class="w-20 h-20 rounded-full bg-red-800/10 border-2 border-red-800/20 flex items-center justify-center text-red-800 font-extrabold text-3xl shadow-sm mx-auto mb-4">
                     A
                 </div>
-                <h3 class="text-lg font-bold text-slate-900 leading-none">IT Admin Pratama</h3>
-                <p class="text-xs text-indigo-600 font-semibold mt-1.5">Senior System Administrator</p>
+                <h3 id="modal-profile-name" class="text-lg font-bold text-slate-900 leading-none">IT Admin Pratama</h3>
+                <p id="modal-profile-role" class="text-xs text-indigo-600 font-semibold mt-1.5">Senior System Administrator</p>
                 <div class="mt-5 space-y-3 text-left text-xs text-slate-600">
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
                         <span class="block text-[10px] text-slate-400 font-bold uppercase" data-i18n="modal.profile.userId">ID Pengguna</span>
-                        <span class="font-mono text-slate-800 mt-1 block">it.admin</span>
-                    </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <span class="block text-[10px] text-slate-400 font-bold uppercase" data-i18n="modal.profile.email">Email Kantor</span>
-                        <span class="text-slate-800 mt-1 block">admin.portal@perusahaan.com</span>
+                        <span id="modal-profile-username" class="font-mono text-slate-800 mt-1 block">it.admin</span>
                     </div>
                 </div>
                 <button onclick="closeProfileModal()" class="w-full mt-6 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold shadow-md transition-all cursor-pointer" data-i18n="modal.profile.close">
@@ -326,10 +321,23 @@
             // Cek profile dari localStorage
             const savedUser = localStorage.getItem('currentUser') || 'Tim IT';
             const savedRole = localStorage.getItem('currentUserRole') || 'IT Staff';
-            document.getElementById('user-name').innerText = savedUser.toLowerCase().replace(/\s/g, '.');
+            const savedUsername = localStorage.getItem('currentUsername') || 'admin';
+            document.getElementById('user-name').innerText = savedUser;
             document.getElementById('dropdown-fullname').innerText = savedUser;
             document.getElementById('user-avatar').innerText = savedUser.charAt(0).toUpperCase();
-            document.getElementById('user-role').innerText = savedRole === 'superadmin' ? 'Super Administrator' : (savedRole === 'admin' ? 'Administrator' : 'IT Staff');
+            
+            const displayRole = savedRole === 'superadmin' ? 'Super Administrator' : (savedRole === 'admin' ? 'Administrator' : 'IT Staff');
+            document.getElementById('user-role').innerText = displayRole;
+
+            // Sync profile details modal DOM elements on load
+            const pAvatar = document.getElementById('modal-profile-avatar');
+            const pName = document.getElementById('modal-profile-name');
+            const pRole = document.getElementById('modal-profile-role');
+            const pUsername = document.getElementById('modal-profile-username');
+            if (pAvatar) pAvatar.textContent = savedUser.charAt(0).toUpperCase();
+            if (pName) pName.textContent = savedUser;
+            if (pRole) pRole.textContent = displayRole;
+            if (pUsername) pUsername.textContent = savedUsername;
 
             // Ambil data aplikasi asli dari api/dashboard.php
             fetch('api/dashboard.php')
@@ -589,6 +597,22 @@
 
         // === MODALS DIALOG POPUPS PROFIL ===
         function showProfileModal() {
+            const savedUser = localStorage.getItem('currentUser') || 'Tim IT';
+            const savedRole = localStorage.getItem('currentUserRole') || 'IT Staff';
+            const savedUsername = localStorage.getItem('currentUsername') || 'admin';
+            
+            const displayRole = savedRole === 'superadmin' ? 'Super Administrator' : (savedRole === 'admin' ? 'Administrator' : 'IT Staff');
+            
+            const avatarEl = document.getElementById('modal-profile-avatar');
+            const nameEl = document.getElementById('modal-profile-name');
+            const roleEl = document.getElementById('modal-profile-role');
+            const usernameEl = document.getElementById('modal-profile-username');
+            
+            if (avatarEl) avatarEl.textContent = savedUser.charAt(0).toUpperCase();
+            if (nameEl) nameEl.textContent = savedUser;
+            if (roleEl) roleEl.textContent = displayRole;
+            if (usernameEl) usernameEl.textContent = savedUsername;
+            
             document.getElementById('modal-profile').classList.remove('hidden');
         }
         function closeProfileModal() {
@@ -596,6 +620,30 @@
         }
 
         function showSettingsModal() {
+            const profileNameEl = document.getElementById('modal-profile-name');
+            const profileRoleEl = document.getElementById('modal-profile-role');
+            
+            let currentProfileName = '';
+            if (profileNameEl && profileNameEl.textContent.trim()) {
+                currentProfileName = profileNameEl.textContent.trim();
+            } else {
+                currentProfileName = localStorage.getItem('currentUser') || 'Tim IT';
+            }
+            
+            let currentProfileRole = '';
+            if (profileRoleEl && profileRoleEl.textContent.trim()) {
+                currentProfileRole = profileRoleEl.textContent.trim();
+            } else {
+                const savedRole = localStorage.getItem('currentUserRole') || 'IT Staff';
+                currentProfileRole = savedRole === 'superadmin' ? 'Super Administrator' : (savedRole === 'admin' ? 'Administrator' : 'IT Staff');
+            }
+            
+            const fullnameInput = document.getElementById('settings-fullname');
+            const roleInput = document.getElementById('settings-role');
+            
+            if (fullnameInput) fullnameInput.value = currentProfileName;
+            if (roleInput) roleInput.value = currentProfileRole;
+            
             document.getElementById('modal-settings').classList.remove('hidden');
         }
         function closeSettingsModal() {
@@ -604,13 +652,37 @@
 
         function saveSettings(e) {
             e.preventDefault();
-            const fullName = document.getElementById('settings-fullname').value;
-            const role = document.getElementById('settings-role').value;
+            const fullName = document.getElementById('settings-fullname').value.trim();
+            const role = document.getElementById('settings-role').value.trim();
             
-            // Simpan perubahan secara visual
-            document.getElementById('user-name').innerText = fullName.toLowerCase().replace(/\s/g, '.');
+            // Simpan perubahan secara permanen di localStorage
+            localStorage.setItem('currentUser', fullName);
+            
+            let roleKey = 'user';
+            if (role.toLowerCase().includes('super')) {
+                roleKey = 'superadmin';
+            } else if (role.toLowerCase().includes('admin')) {
+                roleKey = 'admin';
+            }
+            localStorage.setItem('currentUserRole', roleKey);
+            
+            // Simpan perubahan secara visual pada header
+            document.getElementById('user-name').innerText = fullName;
             document.getElementById('dropdown-fullname').innerText = fullName;
-            document.getElementById('user-role').innerText = role;
+            document.getElementById('user-avatar').innerText = fullName.charAt(0).toUpperCase();
+            
+            const userRoleEl = document.getElementById('user-role');
+            if (userRoleEl) {
+                userRoleEl.innerText = role;
+            }
+            
+            // Sync changes to profile details modal
+            const pAvatar = document.getElementById('modal-profile-avatar');
+            const pName = document.getElementById('modal-profile-name');
+            const pRole = document.getElementById('modal-profile-role');
+            if (pAvatar) pAvatar.textContent = fullName.charAt(0).toUpperCase();
+            if (pName) pName.textContent = fullName;
+            if (pRole) pRole.textContent = role;
             
             closeSettingsModal();
             alert('Pengaturan preferensi profil Anda berhasil disimpan secara lokal.');

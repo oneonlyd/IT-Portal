@@ -219,9 +219,10 @@
                 return data;
             })
             .then(data => {
-                // Simpan nama lengkap dan role di localStorage untuk ditampilkan di UI dashboard
+                // Simpan nama lengkap, role, dan username di localStorage untuk ditampilkan di UI dashboard
                 localStorage.setItem('currentUser', data.data.nama_lengkap);
                 localStorage.setItem('currentUserRole', data.data.role);
+                localStorage.setItem('currentUsername', user);
                 
                 // Alihkan halaman ke dashboard dengan transisi
                 navigateTo('dashboard.html');
