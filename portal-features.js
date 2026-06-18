@@ -22,7 +22,7 @@ const I18N = {
 
     // === DASHBOARD PAGE ===
     'dash.nav.dashboard': { id: 'Dashboard', en: 'Dashboard' },
-    'dash.nav.admin': { id: 'Admin Panel (Kelola)', en: 'Admin Panel (Manage)' },
+    'dash.nav.admin': { id: 'Admin Panel', en: 'Admin Panel' },
     'dash.loginAs': { id: 'Masuk Sebagai:', en: 'Logged In As:' },
     'dash.profileBtn': { id: 'Detail Profil', en: 'Profile Details' },
     'dash.settingsBtn': { id: 'Pengaturan', en: 'Settings' },

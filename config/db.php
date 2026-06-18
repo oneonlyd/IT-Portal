@@ -6,7 +6,7 @@
 $host     = 'mysql';    // Menggunakan IP local loopback (lebih cepat dibanding 'localhost' di beberapa OS)
 $db       = 'it_portal';    // Nama database yang telah kita buat
 $user     = 'root';         // User utama MySQL
-$pass     = 'devina123'; // PENTING: Ganti dengan password baru yang Anda atur di phpMyAdmin sebelumnya!
+$pass     = 'Apel1289'; // Password untuk koneksi MySQL lokal
 $charset  = 'utf8mb4';      // Charset yang mendukung penyimpanan teks Unicode modern
 
 // Auto-fallback to localhost if 'mysql' host is not resolvable (e.g., local XAMPP outside Docker container)

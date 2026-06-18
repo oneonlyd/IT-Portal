@@ -135,6 +135,20 @@ try {
                 ':password_app_encrypted' => ($tipeKred === 'sama_portal') ? null : $passwordEncrypted,
                 ':catatan'                => $catatan
             ]);
+            
+            // 4. Hubungkan aplikasi baru ke semua user agar dapat diakses di dashboard
+            $usersQuery = "SELECT id FROM users";
+            $usersStmt = $pdo->query($usersQuery);
+            $usersList = $usersStmt->fetchAll(PDO::FETCH_COLUMN);
+            
+            $queryAkses = "INSERT IGNORE INTO user_app_akses (user_id, app_id) VALUES (:user_id, :app_id)";
+            $stmtAkses = $pdo->prepare($queryAkses);
+            foreach ($usersList as $uId) {
+                $stmtAkses->execute([
+                    ':user_id' => $uId,
+                    ':app_id'  => $appId
+                ]);
+            }
 
             $pdo->commit(); // Commit semua query jika berhasil
             echo json_encode(['status' => 'success', 'message' => 'Aplikasi berhasil ditambahkan!']);
