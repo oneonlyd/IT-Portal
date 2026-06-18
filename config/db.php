@@ -9,6 +9,11 @@ $user     = 'root';         // User utama MySQL
 $pass     = 'devina123'; // PENTING: Ganti dengan password baru yang Anda atur di phpMyAdmin sebelumnya!
 $charset  = 'utf8mb4';      // Charset yang mendukung penyimpanan teks Unicode modern
 
+// Auto-fallback to localhost if 'mysql' host is not resolvable (e.g., local XAMPP outside Docker container)
+if (gethostbyname($host) === $host) {
+    $host = '127.0.0.1';
+}
+
 // 2. Data Source Name (DSN)
 // DSN memberi tahu PDO driver mana yang dipakai (mysql), alamat host, nama database, dan charset-nya.
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

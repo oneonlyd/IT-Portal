@@ -41,6 +41,7 @@ const I18N = {
     'dash.resetSearch': { id: 'Reset Pencarian', en: 'Reset Search' },
     'dash.copyright': { id: '© 2026 IT Internship - Devina Setya Maharani', en: '© 2026 IT Internship - Devina Setya Maharani' },
     'dash.openAutoFill': { id: 'Buka & Auto-Fill', en: 'Open & Auto-Fill' },
+    'dash.openLink': { id: 'Buka Link', en: 'Open Link' },
     'dash.protected': { id: '•••••••• (Terproteksi)', en: '•••••••• (Protected)' },
 
     // === DASHBOARD MODALS ===
@@ -181,8 +182,10 @@ function isDarkMode() {
 function applyDarkMode() {
     const dark = isDarkMode();
     if (dark) {
+        document.documentElement.classList.add('dark');
         document.body.classList.add('dark');
     } else {
+        document.documentElement.classList.remove('dark');
         document.body.classList.remove('dark');
     }
 

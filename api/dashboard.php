@@ -18,19 +18,21 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     exit;
 }
 
-// Import file koneksi database
+// Import file koneksi database dan pengaman
 require_once '../config/db.php';
+require_once '../config/security.php';
 
 // Ambil ID user dari session yang aktif
 $userId = $_SESSION['user_id'];
 
 try {
     // 2. Query JOIN dengan Prepared Statement
-    // Kita menyeleksi kolom dari tabel 'aplikasi' (alias a) yang terhubung dengan tabel 'user_app_akses' (alias uaa)
-    // berdasarkan ID user yang sedang login.
-    $query = "SELECT a.id, a.nama_app, a.deskripsi, a.tipe, a.url_atau_path, a.warna_banner, a.ikon, a.kategori 
+    // Kita menyeleksi kolom dari tabel 'aplikasi' beserta kredensial terenkripsi
+    $query = "SELECT a.id, a.nama_app, a.deskripsi, a.tipe, a.url_atau_path, a.warna_banner, a.ikon, a.kategori,
+                     ka.tipe_kredensial, ka.username_app, ka.password_app_encrypted
               FROM aplikasi a 
               INNER JOIN user_app_akses uaa ON a.id = uaa.app_id 
+              LEFT JOIN kredensial_app ka ON a.id = ka.app_id
               WHERE uaa.user_id = :user_id 
               ORDER BY a.kategori ASC, a.nama_app ASC";
               
@@ -42,10 +44,39 @@ try {
     // 4. Fetch semua baris aplikasi
     $apps = $stmt->fetchAll();
 
-    // Kirim respon sukses beserta data aplikasi
+    // 5. Dekripsi kredensial untuk ditampilkan langsung pada kartu dashboard
+    $decryptedApps = [];
+    foreach ($apps as $app) {
+        $usernameApp = '';
+        $passwordApp = '';
+        if (isset($app['tipe_kredensial'])) {
+            if ($app['tipe_kredensial'] === 'sama_portal') {
+                $usernameApp = $_SESSION['username'];
+                $passwordApp = isset($_SESSION['portal_password']) ? $_SESSION['portal_password'] : '';
+            } else {
+                $usernameApp = $app['username_app'];
+                $passwordApp = decrypt_password($app['password_app_encrypted']);
+            }
+        }
+        
+        $decryptedApps[] = [
+            'id' => $app['id'],
+            'nama_app' => $app['nama_app'],
+            'deskripsi' => $app['deskripsi'],
+            'tipe' => $app['tipe'],
+            'url_atau_path' => $app['url_atau_path'],
+            'warna_banner' => $app['warna_banner'],
+            'ikon' => $app['ikon'],
+            'kategori' => $app['kategori'],
+            'username_app' => $usernameApp,
+            'password_app' => $passwordApp
+        ];
+    }
+
+    // Kirim respon sukses beserta data aplikasi terdekripsi
     echo json_encode([
         'status' => 'success',
-        'data' => $apps
+        'data' => $decryptedApps
     ]);
     exit;
 } catch (\PDOException $e) {
