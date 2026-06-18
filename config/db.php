@@ -3,40 +3,49 @@
 // File ini digunakan untuk membuat koneksi tunggal ke database MySQL menggunakan PDO.
 
 // 1. Parameter Konfigurasi Database
-$host     = '127.0.0.1';    // Menggunakan IP local loopback (lebih cepat dibanding 'localhost' di beberapa OS)
 $db       = 'it_portal';    // Nama database yang telah kita buat
 $user     = 'root';         // User utama MySQL
-$pass     = 'Apel1289'; // Password untuk koneksi MySQL lokal
 $charset  = 'utf8mb4';      // Charset yang mendukung penyimpanan teks Unicode modern
 
-// 2. Data Source Name (DSN)
-// DSN memberi tahu PDO driver mana yang dipakai (mysql), alamat host, nama database, dan charset-nya.
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-
-// 3. Opsi Tambahan untuk PDO
+// 2. Opsi Tambahan untuk PDO
 $options = [
-    // Mengaktifkan Error Mode sebagai Exception. Jika ada query yang salah, PHP akan mengeluarkan error (try-catch bisa menangkapnya).
+    // Mengaktifkan Error Mode sebagai Exception
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, 
-    // Mengatur fetch mode default menjadi array asosiatif (misal: $row['nama_app'] daripada $row[0]).
+    // Mengatur fetch mode default menjadi array asosiatif
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       
-    // Menonaktifkan emulasi prepared statement agar MySQL native yang memproses query (lebih aman dari SQL Injection).
+    // Menonaktifkan emulasi prepared statement agar lebih aman dari SQL Injection
     PDO::ATTR_EMULATE_PREPARES   => false,                  
 ];
 
-try {
-    // 4. Membuat Koneksi
-    // Kita membuat objek koneksi baru bernama $pdo. Objek inilah yang nanti kita panggil untuk menjalankan query database.
-    $pdo = new PDO($dsn, $user, $pass, $options);
-    
-    // Baris ini bisa diaktifkan sementara untuk testing. Nanti jika sudah sukses, baris ini harus dinonaktifkan/dihapus.
-    // echo "Koneksi ke database berhasil!";
-} catch (\PDOException $e) {
-    // Jika koneksi gagal, kembalikan respon JSON yang valid agar browser dapat menampilkan pesan error yang tepat
+// Mencoba berbagai skenario koneksi secara dinamis untuk kompatibilitas multi-environment (Docker & XAMPP lokal)
+$connections = [
+    ['host' => 'mysql',     'pass' => 'devina123'], // Skenario 1: Docker (Default)
+    ['host' => '127.0.0.1', 'pass' => 'devina123'], // Skenario 2: XAMPP lokal default
+    ['host' => '127.0.0.1', 'pass' => 'Apel1289']   // Skenario 3: Host lokal dengan password khusus
+];
+
+$pdo = null;
+$connected = false;
+$lastError = '';
+
+foreach ($connections as $conn) {
+    try {
+        $dsn = "mysql:host=" . $conn['host'] . ";dbname=$db;charset=$charset";
+        $pdo = new PDO($dsn, $user, $conn['pass'], $options);
+        $connected = true;
+        break; // Berhasil terhubung, keluar dari loop
+    } catch (\PDOException $e) {
+        $lastError = $e->getMessage();
+    }
+}
+
+if (!$connected) {
+    // Jika seluruh skenario gagal, kembalikan respon JSON agar tidak merusak parser browser
     http_response_code(500);
     header('Content-Type: application/json');
     echo json_encode([
         'status' => 'error',
-        'message' => 'Koneksi database gagal: ' . $e->getMessage()
+        'message' => 'Koneksi database gagal setelah mencoba seluruh skenario: ' . $lastError
     ]);
     exit;
 }
