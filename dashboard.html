@@ -287,6 +287,13 @@
                             </div>
                         </div>
                     </div>
+                    <div class="border-t border-slate-200 pt-2 flex flex-col gap-1.5" id="launch-plugin-container">
+                        <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">Plug-In Otomatisasi (AHK):</div>
+                        <button onclick="downloadPluginAHK()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-[0.98]">
+                            <i data-lucide="download" class="w-3.5 h-3.5 text-slate-500"></i>
+                            Download Plug-In (.ahk)
+                        </button>
+                    </div>
                     <div id="launch-catatan-container" class="border-t border-slate-200 pt-2 hidden">
                         <div class="text-[10px] text-slate-400 font-bold uppercase mb-1" data-i18n="modal.launch.note">Catatan Keamanan:</div>
                         <span id="launch-catatan" class="text-slate-500 italic"></span>
@@ -625,10 +632,12 @@
             document.getElementById('modal-app-launch').classList.add('hidden');
         }
 
-        function triggerLinkSim() {
-            // Trigger AutoHotkey script download from the server-side endpoint
+        function downloadPluginAHK() {
+            if (!activeLaunchId) return;
             window.location.href = `api/download_ahk.php?app_id=${activeLaunchId}`;
-            
+        }
+
+        function triggerLinkSim() {
             if (activeLaunchType === 'Web') {
                 // For Web apps, also open the link in a new tab immediately
                 let launchUrl = activeLaunchUrl;
@@ -655,6 +664,9 @@
                     }
                 }
                 window.open(launchUrl, '_blank');
+            } else {
+                // Guide the user for Desktop apps
+                alert('Aplikasi Desktop terdeteksi. Silakan buka aplikasi tersebut dari komputer Anda. Jika Plug-In AutoHotkey sudah berjalan di background, login akan otomatis terisi.');
             }
             closeLaunchModal();
         }
