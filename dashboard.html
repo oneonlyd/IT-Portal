@@ -628,9 +628,12 @@
             let activationCode = "";
             let windowTarget = "";
 
+            // Bersihkan tanda kutip ganda di awal/akhir path
+            const cleanedPath = appPath ? appPath.trim().replace(/^"+|"+$/g, '') : '';
+
             if (appType === 'Desktop') {
-                if (appPath) {
-                    const match = appPath.match(/([^\\]+\.exe)/i);
+                if (cleanedPath) {
+                    const match = cleanedPath.match(/([^\\]+\.exe)/i);
                     if (match) {
                         windowTarget = `ahk_exe ${match[1]}`;
                     }
@@ -644,12 +647,12 @@
                 activationCode = `; Tunggu sampai window aplikasi muncul, lalu aktifkan dan fokuskan
 WinWait, ${windowTarget},, 15
 if (ErrorLevel) {
-    MsgBox, 48, IT Portal Automation, Timeout menunggu ${appName} terbuka.
+    MsgBox, 48, IT Portal Automation, Timeout menunggu ${appName} terbuka. Anda juga bisa menekan F2 untuk melakukan autofill manual setelah aplikasi terbuka.
     ExitApp
 }
 WinActivate, ${windowTarget}
 WinWaitActive, ${windowTarget},, 10
-Sleep, 1000
+Sleep, 1500
 `;
             } else {
                 activationCode = `; Tunggu browser atau window inisialisasi
@@ -663,10 +666,23 @@ SetTitleMatchMode, 2
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 
+; Meminta hak akses Administrator secara otomatis (Wajib untuk berinteraksi dengan aplikasi UAC/Admin)
+if not A_IsAdmin
+{
+    Run *RunAs "%A_ScriptFullPath%"
+    ExitApp
+}
+
 ; Jalankan aplikasi
-Run, "${appPath}"
+Run, "${cleanedPath}"
 ${activationCode}
-; Isi kredensial secara otomatis
+; Lakukan autofill otomatis pertama kali
+Gosub, DoAutofill
+return  ; Akhir dari bagian eksekusi otomatis
+
+; Tombol Hotkey Manual: Tekan F2 untuk melakukan autofill secara manual kapan saja jika input aktif
+F2::
+DoAutofill:
 Send, {Raw}${username}
 Sleep, 500
 Send, {Tab}
@@ -674,6 +690,7 @@ Sleep, 500
 Send, {Raw}${password}
 Sleep, 500
 Send, {Enter}
+return
 `;
             
             const blob = new Blob([ahkCode], { type: 'text/plain;charset=utf-8' });
