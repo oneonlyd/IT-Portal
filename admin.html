@@ -266,6 +266,18 @@
                 </div>
 
                 <div>
+                    <label for="app-cred-type" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Tipe Kredensial</label>
+                    <select 
+                        id="app-cred-type" 
+                        onchange="adjustCredTypeFields()"
+                        class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1"
+                    >
+                        <option value="custom">Kustom (Tentukan Sendiri)</option>
+                        <option value="sama_portal">Sama dengan Portal IT (SSO)</option>
+                    </select>
+                </div>
+
+                <div>
                     <label id="app-url-label" for="app-url" class="block text-xs font-semibold text-slate-600 uppercase mb-1.5" data-i18n="admin.form.urlLabel">URL Aplikasi (Web)</label>
                     <input 
                         type="text" 
@@ -458,6 +470,7 @@
                             color: app.warna_banner,
                             username: app.username_app || '-',
                             password: app.password_app || '',
+                            tipe_kredensial: app.tipe_kredensial,
                             desc: app.deskripsi || ''
                         };
                     });
@@ -592,6 +605,31 @@
             }
         }
 
+        // Menyesuaikan field username/password berdasarkan tipe kredensial
+        function adjustCredTypeFields() {
+            const credType = document.getElementById('app-cred-type').value;
+            const usernameInput = document.getElementById('app-username');
+            const passwordInput = document.getElementById('app-password');
+            
+            if (credType === 'sama_portal') {
+                usernameInput.value = '';
+                passwordInput.value = '';
+                usernameInput.disabled = true;
+                passwordInput.disabled = true;
+                usernameInput.required = false;
+                passwordInput.required = false;
+                usernameInput.placeholder = "Otomatis menggunakan username Portal";
+                passwordInput.placeholder = "Otomatis menggunakan password Portal";
+            } else {
+                usernameInput.disabled = false;
+                passwordInput.disabled = false;
+                usernameInput.required = true;
+                passwordInput.required = true;
+                usernameInput.placeholder = "Contoh: admin.helpdesk";
+                passwordInput.placeholder = "Contoh: P@ss123";
+            }
+        }
+
         // Buka modal untuk Tambah Aplikasi
         function openAddModal() {
             document.getElementById('form-modal-title').innerHTML = `<i data-lucide="plus" class="w-5 h-5 text-red-800"></i> ${t('admin.form.addTitle')}`;
@@ -599,11 +637,13 @@
             document.getElementById('app-name').value = '';
             document.getElementById('app-type').value = 'Web';
             document.getElementById('app-color').value = 'cyan';
+            document.getElementById('app-cred-type').value = 'custom';
             document.getElementById('app-url').value = '';
             document.getElementById('app-username').value = '';
             document.getElementById('app-password').value = '';
 
             adjustFormPlaceholder();
+            adjustCredTypeFields();
             document.getElementById('modal-app-form').classList.remove('hidden');
             lucide.createIcons();
         }
@@ -619,10 +659,12 @@
             document.getElementById('app-type').value = app.type;
             document.getElementById('app-color').value = app.color;
             document.getElementById('app-url').value = app.url;
+            document.getElementById('app-cred-type').value = app.tipe_kredensial || 'custom';
             document.getElementById('app-username').value = app.username === '-' ? '' : app.username;
             document.getElementById('app-password').value = app.password; // password asli terdekripsi dari API
 
             adjustFormPlaceholder();
+            adjustCredTypeFields();
             document.getElementById('modal-app-form').classList.remove('hidden');
             lucide.createIcons();
         }
@@ -642,6 +684,7 @@
             const appUrl = document.getElementById('app-url').value.trim();
             const appUsername = document.getElementById('app-username').value.trim();
             const appPassword = document.getElementById('app-password').value.trim();
+            const appCredType = document.getElementById('app-cred-type').value;
 
             const payload = {
                 action: appId ? 'update' : 'create',
@@ -653,7 +696,7 @@
                 warna_banner: appColor,
                 ikon: appType === 'Web' ? 'globe' : 'monitor',
                 kategori: 'IT Services',
-                tipe_kredensial: 'custom',
+                tipe_kredensial: appCredType,
                 username_app: appUsername,
                 password_app: appPassword
             };
