@@ -57,7 +57,7 @@ try {
         
         // Simpan data user ke Session Global PHP
         $_SESSION['user_id']      = $user['id'];
-        $_SESSION['username']     = $user['username'];
+        $_SESSION['username']     = $username;
         $_SESSION['nama_lengkap'] = $user['nama_lengkap'];
         $_SESSION['role']         = $user['role'];
         $_SESSION['is_logged_in'] = true;
