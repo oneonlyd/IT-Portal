@@ -481,7 +481,14 @@
                                 </div>
                                 <div class="flex items-center justify-between gap-2">
                                     <span class="text-[10px] text-slate-450 font-bold uppercase tracking-wider">PASSWORD:</span>
-                                    <span class="font-mono text-slate-800 font-semibold select-all">${app.password_app || '-'}</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span id="card-password-${app.id}" class="font-mono text-slate-800 font-semibold select-all">${app.password_app ? '••••••••' : '-'}</span>
+                                        ${app.password_app ? `
+                                        <button onclick="toggleCardPasswordVisibility('${app.id}')" class="text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer p-0.5" title="Tampilkan/Sembunyikan Password">
+                                            <i data-lucide="eye" class="w-3.5 h-3.5 text-slate-500" id="card-password-eye-icon-${app.id}"></i>
+                                        </button>
+                                        ` : ''}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -686,6 +693,29 @@
                     eyeIconEl.setAttribute('data-lucide', 'eye');
                 }
                 lucide.createIcons();
+            }
+        }
+
+        // Fungsi untuk menyembunyikan/menampilkan password di kartu dashboard
+        function toggleCardPasswordVisibility(appId) {
+            const app = ALL_APPS.find(a => a.id == appId);
+            if (!app) return;
+            
+            const passwordEl = document.getElementById(`card-password-${appId}`);
+            const eyeIconEl = document.getElementById(`card-password-eye-icon-${appId}`);
+            
+            if (passwordEl && eyeIconEl) {
+                const isCurrentlyMasked = passwordEl.innerText === '••••••••';
+                if (isCurrentlyMasked) {
+                    passwordEl.innerText = app.password_app || '-';
+                    eyeIconEl.setAttribute('data-lucide', 'eye-off');
+                } else {
+                    passwordEl.innerText = app.password_app ? '••••••••' : '-';
+                    eyeIconEl.setAttribute('data-lucide', 'eye');
+                }
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
             }
         }
 
