@@ -329,6 +329,17 @@
         // State filter aktif
         let selectedFilter = 'Semua';
 
+        // Map legacy color name to HEX for compatibility
+        const COLOR_MAP = {
+            'cyan': '#06b6d4',
+            'blue': '#3b82f6',
+            'purple': '#6366f1',
+            'gray': '#64748b',
+            'emerald': '#10b981',
+            'rose': '#f43f5e',
+            'amber': '#f59e0b'
+        };
+
         // Pada saat halaman dimuat
         document.addEventListener("DOMContentLoaded", () => {
             // Cek profile dari localStorage
@@ -366,13 +377,17 @@
                 if (resData && resData.status === 'success') {
                     // Petakan data dari backend ke format JS frontend
                     ALL_APPS = resData.data.map(app => {
+                        let normalizedColor = app.warna_banner || '#3b82f6';
+                        if (COLOR_MAP[normalizedColor]) {
+                            normalizedColor = COLOR_MAP[normalizedColor];
+                        }
                         return {
                             id: app.id,
                             name: app.nama_app,
                             desc: app.deskripsi || '',
                             type: app.tipe === 'web' ? 'Web' : 'Desktop',
                             url: app.url_atau_path,
-                            color: app.warna_banner || '#3b82f6',
+                            color: normalizedColor,
                             ikon: app.ikon || 'laptop',
                             kategori: app.kategori || 'Umum',
                             username_app: app.username_app,

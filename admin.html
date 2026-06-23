@@ -254,13 +254,13 @@
                             id="app-color" 
                             class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-red-800 focus:bg-white focus:ring-1"
                         >
-                            <option value="cyan">Cyan (Biru Muda)</option>
-                            <option value="blue">Blue (Biru Utama)</option>
-                            <option value="purple">Purple (Ungu Violet)</option>
-                            <option value="gray">Gray (Abu Slate)</option>
-                            <option value="emerald">Emerald (Hijau Daun)</option>
-                            <option value="rose">Rose (Merah Jambu)</option>
-                            <option value="amber">Amber (Kuning Mas)</option>
+                            <option value="#06b6d4">Cyan (Biru Muda)</option>
+                            <option value="#3b82f6">Blue (Biru Utama)</option>
+                            <option value="#6366f1">Purple (Ungu Violet)</option>
+                            <option value="#64748b">Gray (Abu Slate)</option>
+                            <option value="#10b981">Emerald (Hijau Daun)</option>
+                            <option value="#f43f5e">Rose (Merah Jambu)</option>
+                            <option value="#f59e0b">Amber (Kuning Mas)</option>
                         </select>
                     </div>
                 </div>
@@ -399,15 +399,23 @@
 
     <!-- === JAVASCRIPT LOGIC DENGAN FITUR CRUD LOKAL === -->
     <script>
-        // Preset warna visual
-        const PRESET_COLORS = {
-            cyan: 'bg-cyan-500',
-            blue: 'bg-blue-600',
-            purple: 'bg-indigo-600',
-            gray: 'bg-slate-600',
-            emerald: 'bg-emerald-600',
-            rose: 'bg-rose-600',
-            amber: 'bg-amber-500'
+        // Map legacy color name to HEX and vice-versa for compatibility
+        const COLOR_MAP = {
+            'cyan': '#06b6d4',
+            'blue': '#3b82f6',
+            'purple': '#6366f1',
+            'gray': '#64748b',
+            'emerald': '#10b981',
+            'rose': '#f43f5e',
+            'amber': '#f59e0b',
+            
+            '#06b6d4': 'cyan',
+            '#3b82f6': 'blue',
+            '#6366f1': 'purple',
+            '#64748b': 'gray',
+            '#10b981': 'emerald',
+            '#f43f5e': 'rose',
+            '#f59e0b': 'amber'
         };
 
         // Memori array penampung dataset (diisi via API)
@@ -462,12 +470,19 @@
                 if (resData && resData.status === 'success') {
                     // Petakan data dari backend ke format JavaScript frontend
                     MY_APPS = resData.data.map(app => {
+                        let normalizedColor = app.warna_banner;
+                        if (COLOR_MAP[normalizedColor] && COLOR_MAP[normalizedColor].startsWith('#')) {
+                            normalizedColor = COLOR_MAP[normalizedColor];
+                        }
+                        if (!normalizedColor || !normalizedColor.startsWith('#')) {
+                            normalizedColor = '#3b82f6';
+                        }
                         return {
                             id: app.id.toString(),
                             name: app.nama_app,
                             type: app.tipe === 'web' ? 'Web' : 'Desktop',
                             url: app.url_atau_path,
-                            color: app.warna_banner,
+                            color: normalizedColor,
                             username: app.username_app || '-',
                             password: app.password_app || '',
                             tipe_kredensial: app.tipe_kredensial,
@@ -518,7 +533,7 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50/70 transition-colors";
                 
-                const bgClass = PRESET_COLORS[app.color] || 'bg-slate-500';
+                const colorLabel = COLOR_MAP[app.color] || app.color;
                 const typeIcon = app.type === 'Web' ? 'globe' : 'monitor';
                 const typeBadgeColor = app.type === 'Web' ? 'bg-cyan-50 text-cyan-700 border-cyan-200' : 'bg-purple-50 text-purple-700 border-purple-200';
 
@@ -547,8 +562,8 @@
                     <!-- Warna Visual -->
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full ${bgClass} shadow-xs"></span>
-                            <span class="text-slate-500 capitalize text-[11px]">${app.color}</span>
+                            <span class="w-3 h-3 rounded-full shadow-xs" style="background-color: ${app.color};"></span>
+                            <span class="text-slate-500 capitalize text-[11px]">${colorLabel}</span>
                         </div>
                     </td>
                     <!-- Tombol Aksi Kerja -->
