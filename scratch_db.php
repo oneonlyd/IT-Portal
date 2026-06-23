@@ -1,22 +1,25 @@
 <?php
-try {
-    $pdo = new PDO("mysql:host=127.0.0.1;dbname=it_portal", "root", "Apel1289", [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]);
-    
-    echo "=== USERS ===\n";
-    $stmt = $pdo->query("SELECT * FROM users");
-    print_r($stmt->fetchAll());
-    
-    echo "=== APLIKASI ===\n";
-    $stmt = $pdo->query("SELECT * FROM aplikasi");
-    print_r($stmt->fetchAll());
+require_once 'config/security.php';
 
-    echo "=== KREDENSIAL ===\n";
-    $stmt = $pdo->query("SELECT * FROM kredensial_app");
-    print_r($stmt->fetchAll());
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage() . "\n";
+$passwords = [
+    'Lenovo001@',
+    'Apel1289',
+    'admin',
+    'password_with_special_chars_!@#$%^&*()_+{}|:"<>?`-=[]\;',
+    'mySecurePassword123'
+];
+
+foreach ($passwords as $p) {
+    $enc = encrypt_password($p);
+    $dec = decrypt_password($enc);
+    echo "Original: " . $p . "\n";
+    echo "Encrypted: " . $enc . "\n";
+    echo "Decrypted: " . $dec . "\n";
+    echo "Status: " . ($p === $dec ? "OK" : "FAIL") . "\n\n";
 }
 ?>
+
+
+
+
+
